@@ -12,7 +12,7 @@ Clone the repo, and run `yarn start` to deploy.
 
 ```bash
 $ git clone https://github.com/UNIMOONnetwork/unimoon-marketplace.git
-$ cd unimoon
+$ cd unimoon-marketplace
 $ cd js
 $ yarn install
 $ yarn bootstrap
