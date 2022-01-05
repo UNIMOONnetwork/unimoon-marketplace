@@ -1,0 +1,78 @@
+.App-Bar {
+  padding: 0px;
+  justify-content: space-between !important;
+}
+
+.app-bar-box {
+  background: #121212;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  // padding: 8px 10px;
+  height: 56px;
+
+  .create {
+    background: radial-gradient(ellipse at top left, #C7479C, transparent 50%), radial-gradient(ellipse at top right, #6BDABB, transparent 70%), radial-gradient(ellipse at bottom left, #5085E3, transparent 75%), radial-gradient(ellipse at bottom, #6BDABB, transparent 50%), radial-gradient(ellipse at bottom right, #C7479C, transparent 87%);
+    border-radius: 20px;
+    height: 40px;
+    width: 130px;
+    background-color: white;
+    font-size: 15px;
+  }
+}
+
+.app-left {
+  padding: 8px 10px;
+}
+
+.title {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 26px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  color: #ffffff;
+  padding: 10px 14px 10px 6px;
+
+  margin-bottom: 0px;
+}
+
+.divider {
+  border-left: 1px solid #282828;
+  width: 2px;
+  height: 40px;
+  margin-right: 14px;
+}
+
+.app-btn {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 19px;
+  border-width: 0px;
+}
+
+.app-bar-inner {
+  display: flex;
+  min-width: 50%;
+  justify-content: center;
+  position: relative;
+  height: auto;
+  .app-bar-item {
+    cursor: pointer;
+    padding: 0 30px;
+    color: @tungsten-60;
+    font-size: 18px;
+    a {
+      color: inherit;
+    }
+    &.active {
+      color: white;
+    }
+  }
+}

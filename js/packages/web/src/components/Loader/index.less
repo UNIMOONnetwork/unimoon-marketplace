@@ -1,0 +1,46 @@
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgb(0 0 0 / 48%);
+  z-index: 1;
+  display: none;
+
+  &.active {
+    display: block;
+  }
+
+  .loader-block {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+
+    font-size: 1.7em;
+    letter-spacing: 0.16em;
+
+    
+    .loader {
+      position: relative;
+      display: flex;
+    }
+
+    .loader-img {
+      position: absolute;
+      width: 100px;
+      z-index: -1;
+    }
+  }
+
+  .loader-title {
+    color: #fff;
+    text-transform: uppercase;
+  }
+}
