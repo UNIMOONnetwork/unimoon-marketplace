@@ -8,6 +8,8 @@ Unimoon is comprised of two core components: an on-chain program, and a self-hos
 
 ## Installing
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e70d1b7d05194e8a85c481a7ba55909f)](https://app.codacy.com/gh/UNIMOONnetwork/unimoon-marketplace?utm_source=github.com&utm_medium=referral&utm_content=UNIMOONnetwork/unimoon-marketplace&utm_campaign=Badge_Grade_Settings)
+
 Clone the repo, and run `yarn start` to deploy.
 
 ```bash
