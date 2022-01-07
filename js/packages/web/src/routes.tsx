@@ -10,6 +10,7 @@ import {
   AuctionCreateView,
   AuctionView,
   HomeView,
+  SearchPage
 } from './views';
 import { AdminView } from './views/admin';
 import { BillingView } from './views/auction/billing';
@@ -53,6 +54,11 @@ export function Routes() {
               exact
               path="/auction/:id/billing"
               component={() => <BillingView />}
+            />
+            <Route
+              exact
+              path="/search"
+              component={() => <SearchPage />}
             />
             <Route path="/" component={() => <HomeView />} />
           </Switch>
