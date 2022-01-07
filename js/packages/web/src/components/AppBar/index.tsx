@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Dropdown, Menu } from 'antd';
 import { ConnectButton, CurrentUserBadge } from '@oyster/common';
@@ -7,6 +7,11 @@ import { Notifications } from '../Notifications';
 import useWindowDimensions from '../../utils/layout';
 import { MenuOutlined } from '@ant-design/icons';
 import { useMeta } from '../../contexts';
+import { Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
+
+const { Search } = Input;
 
 const UserActions = () => {
   const { publicKey } = useWallet();
@@ -116,6 +121,14 @@ const MetaplexMenu = () => {
 
 export const AppBar = () => {
   const { connected } = useWallet();
+  const [searchText, setSearchText] = useState("");
+  const history = useHistory();
+
+  const onSearch = () => history.push(`/search?q=` + searchText);
+
+  const onSearchChange = (e) => {
+    setSearchText(e.target.value);
+  }
 
   return (
     <>
@@ -123,6 +136,16 @@ export const AppBar = () => {
         {window.location.hash !== '#/analytics' && <Notifications />}
         <div className="divider" />
         <MetaplexMenu />
+        <div className="divider" />
+        {/* <Search
+          placeholder="input search text"
+          allowClear
+          enterButton="Search"
+          size="large"
+          onSearch={onSearch}
+        /> */}
+        <Input placeholder="Input search text" value={searchText} onChange={onSearchChange}/>
+        <Button type="dashed" shape="circle" icon={<SearchOutlined />} size="large" onClick={onSearch}/>
       </div>
       {connected ? (
         <div className="app-right app-bar-box">
