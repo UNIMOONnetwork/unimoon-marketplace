@@ -62,7 +62,7 @@ export const ENDPOINTS = [
   },
   {
     name: 'devnet' as ENV,
-    endpoint: clusterApiUrl('devnet'),
+    endpoint: 'https://solana--devnet.datahub.figment.io/apikey/42ada53c5c21e7f24e43d45d1ccbcb0a/',
     ChainId: ChainId.Devnet,
   },
 ];

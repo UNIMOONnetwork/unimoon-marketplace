@@ -280,17 +280,20 @@ export const loadAccounts = async (connection: Connection) => {
     };
 
   const loadVaults = () =>
-    getProgramAccounts(connection, VAULT_ID).then(
-      forEachAccount(processVaultData),
-    );
+    getProgramAccounts(connection, VAULT_ID).then(() => {
+      console.log('loadVaults');
+      forEachAccount(processVaultData);
+    });
   const loadAuctions = () =>
-    getProgramAccounts(connection, AUCTION_ID).then(
-      forEachAccount(processAuctions),
-    );
+    getProgramAccounts(connection, AUCTION_ID).then(() => {
+      console.log('loadAuctions');
+      forEachAccount(processAuctions);
+    });
   const loadMetaplex = () =>
-    getProgramAccounts(connection, METAPLEX_ID).then(
-      forEachAccount(processMetaplexAccounts),
-    );
+    getProgramAccounts(connection, METAPLEX_ID).then(() => {
+      console.log('loadMetaplex');
+      forEachAccount(processMetaplexAccounts);
+    });
   const loadCreators = () =>
     getProgramAccounts(connection, METAPLEX_ID, {
       filters: [
@@ -299,9 +302,15 @@ export const loadAccounts = async (connection: Connection) => {
         },
       ],
     }).then(forEach(processMetaplexAccounts));
-  const loadMetadata = () =>
+  const loadMetadata = () => {
+    console.log('loadMetadata');
     pullMetadataByCreators(connection, state, updateState);
-  const loadEditions = () => pullEditions(connection, updateState, state);
+  };
+
+  const loadEditions = () => {
+    console.log('loadEdition');
+    pullEditions(connection, updateState, state);
+  };
 
   const loading = [
     loadCreators().then(loadMetadata).then(loadEditions),
