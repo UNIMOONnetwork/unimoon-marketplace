@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Button, Skeleton, Carousel, List, Card } from 'antd';
+import {
+  Row,
+  Col,
+  Divider,
+  Layout,
+  Button,
+  Avatar,
+  Input,
+  AutoComplete,
+} from 'antd';
 import { Redirect } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 
@@ -8,6 +17,7 @@ import profileService from '../../services/profile';
 // import { useNotiStack } from '../../components/NotiStack';
 // import Input from '../../components/Input';
 // import { Preview } from '../../components/Preview';
+import { UserOutlined } from '@ant-design/icons';
 
 export const EditProfilePage = () => {
   const wallet = useWallet();
@@ -27,6 +37,9 @@ export const EditProfilePage = () => {
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
 
   const userId = wallet?.publicKey?.toString();
+
+  const { Content } = Layout;
+  const { TextArea } = Input;
 
   const handleFileSelect = ({ target }) => {
     if (target.files) {
@@ -81,21 +94,21 @@ export const EditProfilePage = () => {
           activity: profile.activity,
         };
 
-      //   profileService
-      //     .updateProfile(wallet?.publicKey?.toBase58(), profileObject)
-      //     .then((res: any) => {
-      //       // displayMessage(res);
-      //     })
-      //     .catch(err => {
-      //       if (err && err.message) {
-      //         // displayMessage(err);
-      //       } else {
-      //         // displayErrorMessage();
-      //       }
-      //     })
-      //     .finally(() => {
-      //       setLoading(false);
-      //     });
+        //   profileService
+        //     .updateProfile(wallet?.publicKey?.toBase58(), profileObject)
+        //     .then((res: any) => {
+        //       // displayMessage(res);
+        //     })
+        //     .catch(err => {
+        //       if (err && err.message) {
+        //         // displayMessage(err);
+        //       } else {
+        //         // displayErrorMessage();
+        //       }
+        //     })
+        //     .finally(() => {
+        //       setLoading(false);
+        //     });
       }
     } else {
       displayWalletMessage();
@@ -120,166 +133,83 @@ export const EditProfilePage = () => {
     <>
       <div className="editProfilePage">
         <Content>
-        <Col>
-          <Row ref={ref}>
-            <Col xs={{ span: 24 }} md={{ span: 12 }} style={{ padding: '30px' }}>
-              <ArtContent
-                style={{ width: '300px', height: '300px', margin: '0 auto' }}
-                height={300}
-                width={300}
-                className="artwork-image"
-                pubkey={id}
-                active={true}
-                allowMeshRender={true}
-                artView={true}
-              />
-            </Col>
-            {/* <Divider /> */}
-            <Col
-              xs={{ span: 24 }}
-              md={{ span: 12 }}
-              style={{ textAlign: 'left', fontSize: '1.4rem' }}
-            >
-              <Row>
-                <div style={{ fontWeight: 700, fontSize: '4rem' }}>
-                  {art.title || <Skeleton paragraph={{ rows: 0 }} />}
+          <Col>
+            <Row>
+              <Col
+                xs={{ span: 24 }}
+                md={{ span: 12 }}
+                style={{ padding: '30px' }}
+              >
+                <div className="thumbnail-wrapper">
+                  <input
+                    accept=".jpeg,.jpg,.png,.gif"
+                    id="upload-button"
+                    type="file"
+                    onChange={handleFileSelect}
+                    style={{ display: 'none' }}
+                  />
+                  <div className="thumbnail-content">
+                    <label htmlFor="upload-button">
+                      <Avatar
+                        src={profileAvatar?.toString()}
+                        style={{ height: 200, width: 200, cursor: 'pointer' }}
+                      ></Avatar>
+                    </label>
+                  </div>
                 </div>
-              </Row>
-              <Row>
-                <Col span={6}>
-                  <h6>Royalties</h6>
-                  <div className="royalties">
-                    {((art.seller_fee_basis_points || 0) / 100).toFixed(2)}%
+              </Col>
+              {/* <Divider /> */}
+              <Col
+                xs={{ span: 24 }}
+                md={{ span: 12 }}
+                style={{ textAlign: 'left', fontSize: '1.4rem' }}
+              >
+                <Row>
+                  <div style={{ fontWeight: 700, fontSize: '4rem' }}>
+                    Profile
                   </div>
-                </Col>
-                <Col span={12}>
-                  <ViewOn id={id} />
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <h6 style={{ marginTop: 5 }}>Created By</h6>
-                  <div className="creators">
-                    {(art.creators || []).map((creator, idx) => {
-                      return (
-                        <div
-                          key={idx}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: 5,
-                          }}
-                        >
-                          <MetaAvatar creators={[creator]} size={64} />
-                          <div>
-                            <span className="creator-name">
-                              {creator.name ||
-                                shortenAddress(creator.address || '')}
-                            </span>
-                            <div style={{ marginLeft: 10 }}>
-                              {!creator.verified &&
-                                (creator.address === pubkey ? (
-                                  <Button
-                                    onClick={async () => {
-                                      try {
-                                        await sendSignMetadata(
-                                          connection,
-                                          wallet,
-                                          id,
-                                        );
-                                      } catch (e) {
-                                        console.error(e);
-                                        return false;
-                                      }
-                                      return true;
-                                    }}
-                                  >
-                                    Approve
-                                  </Button>
-                                ) : (
-                                  tag
-                                ))}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <h6 style={{ marginTop: 5 }}>Edition</h6>
-                  <div className="art-edition">{badge}</div>
-                </Col>
-              </Row>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <h6 style={{ marginTop: 5 }}>Name</h6>
+                    <AutoComplete
+                      className="profile-input"
+                      style={{ width: '100%' }}
+                      placeholder="Name"
+                      options={[{ value: 'text 1' }, { value: 'text 2' }]}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <h6>Email</h6>
+                    <AutoComplete
+                      className="profile-input"
+                      style={{ width: '100%' }}
+                      placeholder="Email"
+                      options={[{ value: 'text 1' }, { value: 'text 2' }]}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+              <Col span="12">
+                <Divider />
 
-              {/* <Button
-                    onClick={async () => {
-                      if(!art.mint) {
-                        return;
-                      }
-                      const mint = new PublicKey(art.mint);
-
-                      const account = accountByMint.get(art.mint);
-                      if(!account) {
-                        return;
-                      }
-
-                      const owner = wallet.publicKey;
-
-                      if(!owner) {
-                        return;
-                      }
-                      const instructions: any[] = [];
-                      await updateMetadata(undefined, undefined, true, mint, owner, instructions)
-
-                      sendTransaction(connection, wallet, instructions, [], true);
-                    }}
-                  >
-                    Mark as Sold
-                  </Button> */}
-
-              {/* TODO: Add conversion of MasterEditionV1 to MasterEditionV2 */}
-              <ArtMinting
-                id={id}
-                key={remountArtMinting}
-                onMint={async () => await setRemountArtMinting(prev => prev + 1)}
-              />
-            </Col>
-            <Col span="12">
-              <Divider />
-              {art.creators?.find(c => !c.verified) && unverified}
-              <br />
-              <div className="info-header">ABOUT THE CREATION</div>
-              <div className="info-content">{description}</div>
-              <br />
-              {/*
+                <div className="info-header">ABOUT YOU</div>
+                <TextArea className="info-content"></TextArea>
+                <br />
+                {/*
                 TODO: add info about artist
               <div className="info-header">ABOUT THE CREATOR</div>
               <div className="info-content">{art.about}</div> */}
-            </Col>
-            <Col span="12">
-              {attributes && (
-                <>
-                  <Divider />
-                  <br />
-                  <div className="info-header">Attributes</div>
-                  <List size="large" grid={{ column: 4 }}>
-                    {attributes.map(attribute => (
-                      <List.Item key={attribute.trait_type}>
-                        <Card title={attribute.trait_type}>
-                          {attribute.value}
-                        </Card>
-                      </List.Item>
-                    ))}
-                  </List>
-                </>
-              )}
-            </Col>
-          </Row>
-        </Col>
-      </Content>
+              </Col>
+              <Col span="6">
+                <Divider />
+                <Button className="action-btn save-btn">Save</Button>
+              </Col>
+            </Row>
+          </Col>
+        </Content>
       </div>
     </>
   );

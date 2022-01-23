@@ -16,6 +16,7 @@ export const SetupView = () => {
   const [isInitalizingStore, setIsInitalizingStore] = useState(false);
   const connection = useConnection();
   const { store } = useMeta();
+  console.log(store);
   const { setStoreForOwner } = useStore();
   const history = useHistory();
   const wallet = useWallet();

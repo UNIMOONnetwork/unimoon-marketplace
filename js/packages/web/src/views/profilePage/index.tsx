@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 // import { useMutation } from 'react-query';
 import BN from 'bn.js';
-import { ProfileByIDRequest, Profile } from '../../services/profile/profile.types';
+import {
+  ProfileByIDRequest,
+  Profile,
+} from '../../services/profile/profile.types';
 import profileService from '../../services/profile';
 
 import {
@@ -12,7 +15,7 @@ import {
   useCreatorArts,
   useUserArts,
 } from '../../hooks';
-import { Details } from './Details';
+
 import { Inventory } from './Inventory';
 
 export const ProfilePage = () => {
@@ -32,6 +35,27 @@ export const ProfilePage = () => {
 
   useEffect(() => {
     // profileOwnerMutation.mutate({ profileId: id });
+    setProfile({
+      profileId: 'test',
+      ownerId: '3qp2RYC8kGGFHhi9owgBoeNA7ZGZrG1drdj1auJjgc7y',
+      name: 'Steven',
+      email: 'steven.wang.dev@gmail.com',
+      phone: '12345678',
+      bio: '',
+      imageUrl: '',
+      banner_url: '',
+      on_sale: [],
+      collectible: [],
+      created: [],
+      liked: [],
+      activity: [],
+      followers: 0,
+      following: 0,
+      description: 'I am a blockchain developer',
+      member_since: '',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
   }, [id]);
 
   if (!id) {
@@ -72,14 +96,10 @@ export const ProfilePage = () => {
 
   let myCollections: any[] = [];
   let keys: string[] = [];
-
   return (
     <>
       {profile && (
         <div className="profile-main-content">
-          <Details
-            profile={profile}
-          />
           <Inventory
             owned={owned}
             profile={profile}

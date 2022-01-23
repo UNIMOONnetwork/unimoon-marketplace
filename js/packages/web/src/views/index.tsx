@@ -10,3 +10,4 @@ export { AnalyticsView } from './analytics';
 export { SearchPage } from './searchPage';
 export { ProfilePage } from './profilePage';
 export { EditProfilePage } from './profilePage/edit';
+export { RankBoard } from './rankBoard';

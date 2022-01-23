@@ -42,12 +42,11 @@ const UserActions = () => {
               Sell
             </Button>
           </Link> */}
-          {canCreate ? <Link to={`/art/create`}>
-            <Button className="create">
-              Create
-            </Button>
-          </Link>
-          : null }
+          {canCreate ? (
+            <Link to={`/art/create`}>
+              <Button className="create">Create</Button>
+            </Link>
+          ) : null}
         </>
       )}
     </>
@@ -121,14 +120,14 @@ const MetaplexMenu = () => {
 
 export const AppBar = () => {
   const { connected } = useWallet();
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const history = useHistory();
 
   const onSearch = () => history.push(`/search?q=` + searchText);
 
-  const onSearchChange = (e) => {
+  const onSearchChange = e => {
     setSearchText(e.target.value);
-  }
+  };
 
   return (
     <>
@@ -144,8 +143,18 @@ export const AppBar = () => {
           size="large"
           onSearch={onSearch}
         /> */}
-        <Input placeholder="Input search text" value={searchText} onChange={onSearchChange}/>
-        <Button type="dashed" shape="circle" icon={<SearchOutlined />} size="large" onClick={onSearch}/>
+        <Input
+          placeholder="Input search text"
+          value={searchText}
+          onChange={onSearchChange}
+        />
+        <Button
+          type="dashed"
+          shape="circle"
+          icon={<SearchOutlined />}
+          size="large"
+          onClick={onSearch}
+        />
       </div>
       {connected ? (
         <div className="app-right app-bar-box">

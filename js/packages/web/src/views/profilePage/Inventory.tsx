@@ -11,6 +11,7 @@ import { PlaceholderAssetCard } from '../../components/PlaceholderAssetCard';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Profile } from '../../services/profile/profile.types';
 import { CardLoader } from '../../components/MyLoader';
+import { ProfileDetailPage } from './details';
 
 const { TabPane } = Tabs;
 
@@ -24,19 +25,20 @@ interface InventoryProps {
 }
 
 export enum ProfileTabState {
-  Owned = '0',
-  Created = '1',
-  Auctions = '2',
+  Profile = '0',
+  Owned = '1',
+  Created = '2',
+  Auctions = '3',
 }
 
 export const Inventory = ({
   owned,
   profile,
   nfts,
-  auctions
+  auctions,
 }: InventoryProps) => {
   const wallet = useWallet();
-  const [activeKey, setActiveKey] = useState(ProfileTabState.Created);
+  const [activeKey, setActiveKey] = useState(ProfileTabState.Profile);
   const userId = wallet?.publicKey?.toString();
 
   const { isLoading } = useMeta();
@@ -56,24 +58,22 @@ export const Inventory = ({
 
   const createdItemsView = (
     <div
-        style={{
+      style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
       }}
     >
       {nfts.map((nItem, index) => (
         // <Card className="art-card" key={index}>
-          <Link to={`/nft/${nItem.pubkey}`}>
-            <ArtContent
-              className="auction-image no-events"
-              preview={false}
-              pubkey={nItem.pubkey}
-              allowMeshRender={false}
-            />
-            <div className="inventory-card">
-                {nItem.info.data.name}
-            </div>
-          </Link>
+        <Link to={`/nft/${nItem.pubkey}`}>
+          <ArtContent
+            className="auction-image no-events"
+            preview={false}
+            pubkey={nItem.pubkey}
+            allowMeshRender={false}
+          />
+          <div className="inventory-card">{nItem.info.data.name}</div>
+        </Link>
         //</Card>
       ))}
     </div>
@@ -88,17 +88,15 @@ export const Inventory = ({
     >
       {owned.map(({ metadata }, index) => (
         // <Card className="art-card" key={index}>
-          <Link to={`/nft/${metadata.pubkey}`}>
-            <ArtContent
-              className="auction-image no-events"
-              preview={false}
-              pubkey={metadata.pubkey}
-              allowMeshRender={false}
-            />
-            <div className="inventory-card">
-                {metadata.info.data.name}
-            </div>
-          </Link>
+        <Link to={`/nft/${metadata.pubkey}`}>
+          <ArtContent
+            className="auction-image no-events"
+            preview={false}
+            pubkey={metadata.pubkey}
+            allowMeshRender={false}
+          />
+          <div className="inventory-card">{metadata.info.data.name}</div>
+        </Link>
         // </Card>
       ))}
     </div>
@@ -112,7 +110,6 @@ export const Inventory = ({
     >
       {!isLoading
         ? auctions.map((m, idx) => {
-
             const id = m.auction.pubkey;
             return (
               <Link to={`/auction/${id}`} key={idx}>
@@ -123,10 +120,6 @@ export const Inventory = ({
         : [...Array(10)].map((_, idx) => <CardLoader key={idx} />)}
     </Masonry>
   );
-  
-  if (!profile) {
-    return null;
-  }
 
   return (
     <Layout>
@@ -137,12 +130,18 @@ export const Inventory = ({
               activeKey={activeKey}
               onTabClick={key => setActiveKey(key as ProfileTabState)}
             >
-              
+              {profile && (
+                <TabPane
+                  tab={<span className="tab-title">Profile</span>}
+                  key={ProfileTabState.Profile}
+                >
+                  <ProfileDetailPage profile={profile} />
+                </TabPane>
+              )}
+
               {profile && profile.ownerId == userId && (
                 <TabPane
-                  tab={
-                    <span className="tab-title">Owned</span>
-                  }
+                  tab={<span className="tab-title">Owned</span>}
                   key={ProfileTabState.Owned}
                 >
                   {ownedItemsView}

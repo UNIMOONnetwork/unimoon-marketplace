@@ -1,82 +1,86 @@
-import React, { useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { Row, Col, Divider, Layout, Button, Avatar } from 'antd';
+import { Redirect } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Identicon } from '@oyster/common';
 
-import { Profile }  from '../../services/profile/profile.types';
+import { useProfileContext } from '../../contexts/profile';
+import profileService from '../../services/profile';
+// import { useNotiStack } from '../../components/NotiStack';
+// import Input from '../../components/Input';
+// import { Preview } from '../../components/Preview';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
-interface DetailsProps {
-  profile?: Profile;
-}
-
-export const Details = ({
-  profile,
-}: DetailsProps) => {
+export const ProfileDetailPage = ({ profile }) => {
   const wallet = useWallet();
-  const userId = wallet?.publicKey?.toString();
 
-  const identicon = (
-    <Identicon
-      address={wallet?.publicKey?.toString()}
-      style={{ width: 42, height: 42 }}
-    />
-  );
+  const [previewOpen, setPreviewOpen] = useState<boolean>(false);
 
-  const memberSince = useMemo(() => {
-    if (profile?.member_since) {
-      return moment(profile?.member_since).format('MMM D, YYYY');
-    }
-    return '';
-  }, [profile?.member_since]);
+  const { Content } = Layout;
 
   return (
-    <div className="profile-details-container">
-      {profile ? (
-        <img className="profile-avatar" src={profile.imageUrl} />
-      ) : (
-        <ListItemAvatar>{identicon}</ListItemAvatar>
-      )}
-      <div className="profile-name-container">
-        {profile ? profile.name : 'Caseclosed'}
-        {/* <Share className="profile-share" fontSize="small" /> */}
+    <>
+      <div className="editProfilePage">
+        <Content>
+          <Col>
+            <Row>
+              <Col
+                xs={{ span: 24 }}
+                md={{ span: 12 }}
+                style={{ padding: '30px' }}
+              >
+                <div className="thumbnail-wrapper">
+                  <div>
+                    <Avatar
+                      src={profile?.toString()}
+                      style={{ height: 200, width: 200, cursor: 'pointer' }}
+                    ></Avatar>
+                  </div>
+                </div>
+              </Col>
+              {/* <Divider /> */}
+              <Col
+                xs={{ span: 24 }}
+                md={{ span: 12 }}
+                style={{ textAlign: 'left', fontSize: '1.4rem' }}
+              >
+                <Row>
+                  <div style={{ fontWeight: 700, fontSize: '4rem' }}>
+                    {profile.name}
+                  </div>
+                </Row>
+                <Row>
+                  <Col span={6}>
+                    <h6>Email</h6>
+                    <div className="profile-email">{profile.email}</div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <h6 style={{ marginTop: 5 }}>Phone</h6>
+                    <div className="profile-phone">{profile.phone}</div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <h6 style={{ marginTop: 5 }}>Edition</h6>
+                  </Col>
+                </Row>
+              </Col>
+              <Col span="12">
+                <Divider />
+
+                <div className="info-header">ABOUT THE USER</div>
+                <div className="info-content">{profile.description}</div>
+                <br />
+                {/*
+                TODO: add info about artist
+              <div className="info-header">ABOUT THE CREATOR</div>
+              <div className="info-content">{art.about}</div> */}
+              </Col>
+            </Row>
+          </Col>
+        </Content>
       </div>
-      {profile && profile.ownerId == userId && (
-        <>
-          <Link to={`/edit-profile`} style={{ width: '100%' }}>
-            <button className="profile-action-button" style={{borderRadius: 12}}>
-              Edit profile
-            </button>
-          </Link>
-        </>
-      )}
-      {profile && (
-        <>
-          {profile?.description && (
-            <div className="profile-about">
-              {profile?.description}
-            </div>
-          )}
-          <div className="profile-member-since">
-            {`MEMBER SINCE: ${memberSince}`}
-          </div>
-        </>
-      )}
-      {profile && profile.ownerId != userId && (
-        <>
-          <Link to={`/`} style={{ marginBottom: 24, width: '100%' }}>
-            <button className="profile-action-button">Follow</button>
-          </Link>
-          <div className="following-area">
-            <div>Followers</div>
-            <div>{profile.followers}</div>
-          </div>
-          <div className="following-area">
-            <div>Following</div>
-            <div>{profile.following}</div>
-          </div>
-        </>
-      )}
-    </div>
+    </>
   );
 };

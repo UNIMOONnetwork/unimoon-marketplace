@@ -12,7 +12,8 @@ import {
   HomeView,
   SearchPage,
   ProfilePage,
-  EditProfilePage
+  EditProfilePage,
+  RankBoard,
 } from './views';
 import { AdminView } from './views/admin';
 import { BillingView } from './views/auction/billing';
@@ -57,11 +58,7 @@ export function Routes() {
               path="/auction/:id/billing"
               component={() => <BillingView />}
             />
-            <Route
-              exact
-              path="/search"
-              component={() => <SearchPage />}
-            />
+            <Route exact path="/search" component={() => <SearchPage />} />
             <Route
               exact
               path="/profile/:id"
@@ -72,6 +69,7 @@ export function Routes() {
               path="/edit-profile"
               component={() => <EditProfilePage />}
             />
+            <Route exact path="/rank-board" component={() => <RankBoard />} />
             <Route path="/" component={() => <HomeView />} />
           </Switch>
         </Providers>

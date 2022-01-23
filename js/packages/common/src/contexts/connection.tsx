@@ -62,7 +62,8 @@ export const ENDPOINTS = [
   },
   {
     name: 'devnet' as ENV,
-    endpoint: 'https://solana--devnet.datahub.figment.io/apikey/42ada53c5c21e7f24e43d45d1ccbcb0a/',
+    // endpoint: 'https://solana--devnet.datahub.figment.io/apikey/42ada53c5c21e7f24e43d45d1ccbcb0a/',
+    endpoint: clusterApiUrl('devnet'),
     ChainId: ChainId.Devnet,
   },
 ];
@@ -560,7 +561,7 @@ export async function sendSignedTransaction({
     slot = confirmation?.slot || 0;
   } catch (err) {
     console.error('Timeout Error caught', err);
-    if (err.timeout) {
+    if (err) {
       throw new Error('Timed out awaiting confirmation on transaction');
     }
     let simulateResult: SimulatedTransactionResponse | null = null;
