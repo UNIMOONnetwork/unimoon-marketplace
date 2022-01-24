@@ -27,7 +27,7 @@ export const ArtistsView = () => {
       {items.map((m, idx) => {
         const id = m.info.address;
         return (
-          <Link to={`/artists/${id}`} key={idx}>
+          <Link to={`/profile/${id}`} key={idx}>
             <ArtistCard
               key={id}
               artist={{

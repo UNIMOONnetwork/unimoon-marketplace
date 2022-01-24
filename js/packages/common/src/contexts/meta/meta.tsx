@@ -83,6 +83,9 @@ export function MetaProvider({ children = null as any }) {
 
   useEffect(() => {
     update();
+    console.log(connection);
+    console.log(storeAddress);
+    console.log(isReady);
   }, [connection, setState, updateMints, storeAddress, isReady]);
 
   useEffect(() => {

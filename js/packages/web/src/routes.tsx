@@ -10,7 +10,10 @@ import {
   AuctionCreateView,
   AuctionView,
   HomeView,
-  SearchPage
+  SearchPage,
+  ProfilePage,
+  EditProfilePage,
+  RankBoard,
 } from './views';
 import { AdminView } from './views/admin';
 import { BillingView } from './views/auction/billing';
@@ -55,11 +58,18 @@ export function Routes() {
               path="/auction/:id/billing"
               component={() => <BillingView />}
             />
+            <Route exact path="/search" component={() => <SearchPage />} />
             <Route
               exact
-              path="/search"
-              component={() => <SearchPage />}
+              path="/profile/:id"
+              component={() => <ProfilePage />}
             />
+            <Route
+              exact
+              path="/edit-profile"
+              component={() => <EditProfilePage />}
+            />
+            <Route exact path="/rank-board" component={() => <RankBoard />} />
             <Route path="/" component={() => <HomeView />} />
           </Switch>
         </Providers>

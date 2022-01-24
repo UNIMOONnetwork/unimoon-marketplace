@@ -10,6 +10,7 @@ import { ConfettiProvider } from './components/Confetti';
 import { AppLayout } from './components/Layout';
 import { LoaderProvider } from './components/Loader';
 import { CoingeckoProvider } from './contexts/coingecko';
+import { ProfileProvider } from './contexts/profile';
 
 export const Providers: FC = ({ children }) => {
   return (

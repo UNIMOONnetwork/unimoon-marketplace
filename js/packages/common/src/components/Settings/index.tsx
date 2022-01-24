@@ -5,6 +5,7 @@ import { ENDPOINTS, useConnectionConfig } from '../../contexts/connection';
 import { useWalletModal } from '../../contexts';
 import { notify, shortenAddress } from '../../utils';
 import { CopyOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 export const Settings = ({
   additionalSettings,
@@ -51,7 +52,9 @@ export const Settings = ({
                 {shortenAddress(publicKey.toBase58())}
               </Button>
             )}
-
+            <Button style={{ marginBottom: 5 }}>
+              <Link to={"/edit-profile"}>Profile</Link>
+            </Button>
             <Button onClick={open} style={{ marginBottom: 5 }}>
               Change
             </Button>
