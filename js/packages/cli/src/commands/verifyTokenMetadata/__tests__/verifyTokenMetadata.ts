@@ -8,6 +8,8 @@ import {
   verifyConsistentShares,
   verifyCreatorCollation,
 } from '../index';
+import { EXTENSION_PNG } from '../../../helpers/constants';
+import { jest } from '@jest/globals';
 
 const getFiles = rootDir => {
   const assets = fs.readdirSync(rootDir).map(file => path.join(rootDir, file));
@@ -27,7 +29,7 @@ describe('`metaplex verify_token_metadata`', () => {
     expect(() =>
       verifyTokenMetadata({ files: mismatchedAssets }),
     ).toThrowErrorMatchingInlineSnapshot(
-      `"number of png files (0) is different than the number of json files (1)"`,
+      `"number of img files (0) is different than the number of json files (1)"`,
     );
   });
 
@@ -38,7 +40,7 @@ describe('`metaplex verify_token_metadata`', () => {
     it(`invalidates ${path.relative(__dirname, invalidSchema)}`, () => {
       expect(() =>
         verifyTokenMetadata({
-          files: [invalidSchema, invalidSchema.replace('.json', '.png')],
+          files: [invalidSchema, invalidSchema.replace('.json', EXTENSION_PNG)],
         }),
       ).toThrowErrorMatchingSnapshot();
     });
@@ -60,6 +62,24 @@ describe('`metaplex verify_token_metadata`', () => {
           { address: 'some-solana-address', share: 80 },
           {
             address: 'some-other-solana-address',
+            share: 19,
+          },
+        ],
+
+        'placeholder-manifest-file',
+      ),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Creator share for placeholder-manifest-file does not add up to 100, got: 99."`,
+    );
+  });
+
+  it('throws on invalid share number type', () => {
+    expect(() =>
+      verifyAggregateShare(
+        [
+          { address: 'some-solana-address', share: 80 },
+          {
+            address: 'some-other-solana-address',
             share: 19.9,
           },
         ],
@@ -67,7 +87,7 @@ describe('`metaplex verify_token_metadata`', () => {
         'placeholder-manifest-file',
       ),
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Creator share for placeholder-manifest-file does not add up to 100, got: 99.9."`,
+      `"Creator share for placeholder-manifest-file contains floats. Only use integers for this number."`,
     );
   });
 

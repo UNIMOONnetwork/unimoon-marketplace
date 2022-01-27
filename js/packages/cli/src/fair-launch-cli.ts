@@ -1601,7 +1601,7 @@ async function getParticipationNft({
   ) {
     console.log(buyer.toBase58(), 'gets participation token.');
     const mint = anchor.web3.Keypair.generate();
-    let signers = [mint];
+    const signers = [mint];
     const tokenAccount = (
       await getParticipationToken(
         fairLaunchObj.authority,
@@ -1609,7 +1609,7 @@ async function getParticipationNft({
       )
     )[0];
     const buyerTokenNft = (await getAtaForMint(mint.publicKey, buyer))[0];
-    let instructions = [
+    const instructions = [
       anchor.web3.SystemProgram.createAccount({
         fromPubkey: payer.publicKey,
         newAccountPubkey: mint.publicKey,
@@ -1684,7 +1684,6 @@ async function punchTicket({
   fairLaunch,
   fairLaunchLotteryBitmap,
   fairLaunchObj,
-  fairLaunchTicketObj,
 }: {
   puncher: anchor.web3.PublicKey;
   anchorProgram: anchor.Program;
@@ -1703,6 +1702,10 @@ async function punchTicket({
     )
   )[0];
 
+  const exists = await anchorProgram.provider.connection.getAccountInfo(
+    buyerTokenAccount,
+  );
+
   await anchorProgram.rpc.punchTicket({
     accounts: {
       fairLaunchTicket,
@@ -1718,15 +1721,17 @@ async function punchTicket({
       commitment: 'single',
     },
     //__private: { logAccounts: true },
-    instructions: [
-      createAssociatedTokenAccountInstruction(
-        buyerTokenAccount,
-        payer.publicKey,
-        puncher,
-        //@ts-ignore
-        fairLaunchObj.tokenMint,
-      ),
-    ],
+    instructions: !exists
+      ? [
+          createAssociatedTokenAccountInstruction(
+            buyerTokenAccount,
+            payer.publicKey,
+            puncher,
+            //@ts-ignore
+            fairLaunchObj.tokenMint,
+          ),
+        ]
+      : undefined,
   });
 
   return buyerTokenAccount;
@@ -2017,6 +2022,251 @@ program
   });
 
 program
+  .command('send_flp_tokens')
+  .option(
+    '-e, --env <string>',
+    'Solana cluster env name',
+    'devnet', //mainnet-beta, testnet, devnet
+  )
+  .option(
+    '-k, --keypair <path>',
+    `Solana wallet location`,
+    '--keypair not provided',
+  )
+  .option('-f, --fair-launch <string>', 'fair launch id')
+  .option('-l, --file <string>', 'file containing \n delimited wallets')
+  .option('-sc, --startCursor <string>', 'start cursor (incl)')
+  .option('-ec, --endCursor <string>', 'end cursor (excl)')
+
+  .option(
+    '-ut, --upper-tolerance <string>',
+    'if a wallet has more than tolerance tokens going to it(>), skip the wallet (assuming a secondary)',
+  )
+  .option(
+    '-lt, --lower-tolerance <string>',
+    'if a wallet has less than tolerance tokens going to it(<)',
+  )
+  .option(
+    '-r, --rpc-url <string>',
+    'custom rpc url since this is a heavy command',
+  )
+
+  .action(async (_, cmd) => {
+    const {
+      env,
+      keypair,
+      fairLaunch,
+      file,
+      upperTolerance,
+      lowerTolerance,
+      startCursor,
+      endCursor,
+      rpcUrl,
+    } = cmd.opts();
+
+    const walletKeyPair = loadWalletKey(keypair);
+    const upTol = parseInt(upperTolerance);
+    const lowTol = parseInt(lowerTolerance);
+    const startC = startCursor ? parseInt(startCursor) : 0;
+
+    const anchorProgram = await loadFairLaunchProgram(
+      walletKeyPair,
+      env,
+      rpcUrl,
+    );
+    const fairLaunchKey = new anchor.web3.PublicKey(fairLaunch);
+    const fairLaunchObj = await anchorProgram.account.fairLaunch.fetch(
+      fairLaunchKey,
+    );
+
+    const array = fs.readFileSync(file).toString().split('\n');
+    const endC = endCursor ? parseInt(endCursor) : array.length;
+    const byCount = {};
+    // use entire array for counts, despite cursor settings.
+    for (let i = 0; i < array.length; i++) {
+      if (byCount[array[i]] === undefined) {
+        byCount[array[i]] = 0;
+      }
+      byCount[array[i]]++;
+    }
+
+    const currSignerBatch: Array<anchor.web3.Keypair[]> = [];
+    const currInstrBatch: Array<anchor.web3.TransactionInstruction[]> = [];
+
+    let sendSigners: anchor.web3.Keypair[] = [];
+    let sendInstr: anchor.web3.TransactionInstruction[] = [];
+
+    const ataSignerBatch: Array<anchor.web3.Keypair[]> = [];
+    const ataInstrBatch: Array<anchor.web3.TransactionInstruction[]> = [];
+
+    let ataSigners: anchor.web3.Keypair[] = [];
+    let ataInstr: anchor.web3.TransactionInstruction[] = [];
+
+    const txnSize = 10;
+    let cursor = startC;
+
+    const lookup = {};
+    try {
+      for (; cursor < Math.min(array.length, endC); cursor++) {
+        const currKey = array[cursor];
+        const currCount = byCount[currKey];
+        if (currKey.length > 2) {
+          if (currCount < lowTol || currCount > upTol) {
+            console.log(
+              'Skipped',
+              currKey,
+              'due to having',
+              currCount,
+              'allocations.',
+            );
+          } else {
+            const existingAta = (
+              await getAtaForMint(
+                fairLaunchObj.tokenMint,
+                new anchor.web3.PublicKey(currKey),
+              )
+            )[0];
+            let exists = lookup[existingAta.toBase58()];
+            if (!exists) {
+              exists =
+                !!(await anchorProgram.provider.connection.getAccountInfo(
+                  existingAta,
+                ));
+            }
+            if (!exists) {
+              ataInstr.push(
+                createAssociatedTokenAccountInstruction(
+                  existingAta,
+                  walletKeyPair.publicKey,
+                  new anchor.web3.PublicKey(currKey),
+                  //@ts-ignore
+                  fairLaunchObj.tokenMint,
+                ),
+              );
+
+              lookup[existingAta.toBase58()] = true;
+            }
+          }
+        }
+        if (ataInstr.length === txnSize) {
+          ataSignerBatch.push(ataSigners);
+          ataInstrBatch.push(ataInstr);
+          ataSigners = [];
+          ataInstr = [];
+        }
+      }
+
+      if (ataInstr.length < txnSize && ataInstr.length > 0) {
+        ataSignerBatch.push(ataSigners);
+        ataInstrBatch.push(ataInstr);
+      }
+    } catch (e) {
+      console.log('Failed on cursor', cursor);
+      throw e;
+    }
+
+    cursor = startC;
+    const myAta = (
+      await getAtaForMint(
+        //@ts-ignore
+        fairLaunchObj.tokenMint,
+        walletKeyPair.publicKey,
+      )
+    )[0];
+    try {
+      // do 1 at a time so if blow up happens, you can restart at exploded cursor.
+      // less efficient but better guarantees on not over-sending.
+      for (; cursor < Math.min(array.length, endC); cursor++) {
+        const currKey = array[cursor];
+        const currCount = byCount[currKey];
+        if (currKey.length > 2) {
+          if (currCount < lowTol || currCount > upTol) {
+            console.log(
+              'Skipped',
+              currKey,
+              'due to having',
+              currCount,
+              'allocations.',
+            );
+          } else {
+            const existingAta = (
+              await getAtaForMint(
+                fairLaunchObj.tokenMint,
+                new anchor.web3.PublicKey(currKey),
+              )
+            )[0];
+
+            sendInstr.push(
+              Token.createTransferInstruction(
+                TOKEN_PROGRAM_ID,
+                myAta,
+                existingAta,
+                walletKeyPair.publicKey,
+                [],
+                1,
+              ),
+            );
+          }
+        }
+
+        if (sendInstr.length === txnSize) {
+          currSignerBatch.push(sendSigners);
+          currInstrBatch.push(sendInstr);
+          sendSigners = [];
+          sendInstr = [];
+        }
+      }
+
+      if (sendInstr.length < txnSize && sendInstr.length > 0) {
+        currSignerBatch.push(sendSigners);
+        currInstrBatch.push(sendInstr);
+      }
+    } catch (e) {
+      console.log('Failed on cursor', cursor);
+      throw e;
+    }
+
+    let txnCursor = startC;
+    try {
+      for (let i = 0; i < ataInstrBatch.length; i++) {
+        const instructionBatch = ataInstrBatch[i];
+        const signerBatch = ataSignerBatch[i];
+        await sendTransactionWithRetryWithKeypair(
+          anchorProgram.provider.connection,
+          walletKeyPair,
+          instructionBatch,
+          signerBatch,
+          'single',
+        );
+        txnCursor += txnSize;
+      }
+    } catch (e) {
+      console.log('ATA account creation Failed on cursor', txnCursor);
+      throw e;
+    }
+    // Give time for last confirmation
+    await sleep(10000);
+    txnCursor = startC;
+    try {
+      for (let i = 0; i < currInstrBatch.length; i++) {
+        const instructionBatch = currInstrBatch[i];
+        const signerBatch = currSignerBatch[i];
+        await sendTransactionWithRetryWithKeypair(
+          anchorProgram.provider.connection,
+          walletKeyPair,
+          instructionBatch,
+          signerBatch,
+          'single',
+        );
+        txnCursor += txnSize;
+      }
+    } catch (e) {
+      console.log('Failed on cursor', txnCursor);
+      throw e;
+    }
+  });
+
+program
   .command('withdraw_funds')
   .option(
     '-e, --env <string>',
@@ -2223,14 +2473,19 @@ program
     '-r, --rpc-url <string>',
     'custom rpc url since this is a heavy command',
   )
+  .option('-w, --whitelist-json <path>', `Whitelist json location`)
   .action(async (_, cmd) => {
-    const { env, keypair, fairLaunch, rpcUrl } = cmd.opts();
+    const { env, keypair, fairLaunch, rpcUrl, whitelistJson } = cmd.opts();
     const walletKeyPair = loadWalletKey(keypair);
     const anchorProgram = await loadFairLaunchProgram(
       walletKeyPair,
       env,
       rpcUrl,
     );
+
+    const whitelist: string[] | null = whitelistJson
+      ? JSON.parse(fs.readFileSync(whitelistJson).toString())
+      : null;
 
     const fairLaunchKey = new anchor.web3.PublicKey(fairLaunch);
     const fairLaunchObj = await anchorProgram.account.fairLaunch.fetch(
@@ -2317,49 +2572,54 @@ program
 
     const ticketsFlattened = ticketKeys.flat();
 
-    const states: { seq: number; number: anchor.BN; eligible: boolean }[][] =
-      await Promise.all(
-        chunks(Array.from(Array(ticketsFlattened.length).keys()), 1000).map(
-          async allIndexesInSlice => {
-            let states = [];
-            for (let i = 0; i < allIndexesInSlice.length; i += 100) {
-              console.log(
-                'Pulling states for slice',
-                allIndexesInSlice[i],
-                allIndexesInSlice[i + 100],
-              );
-              const slice = allIndexesInSlice
-                .slice(i, i + 100)
-                .map(index => ticketsFlattened[index]);
-              const result = await getMultipleAccounts(
-                anchorProgram.provider.connection,
-                slice.map(s => s.toBase58()),
-                'recent',
-              );
-              states = states.concat(
-                result.array.map(a => {
-                  const el = anchorProgram.coder.accounts.decode(
-                    'FairLaunchTicket',
-                    a.data,
-                  );
-                  return {
-                    seq: el.seq.toNumber(),
-                    number: el.amount.toNumber(),
-                    eligible: !!(
-                      el.state.unpunched &&
-                      el.amount.toNumber() >=
-                        //@ts-ignore
-                        fairLaunchObj.currentMedian.toNumber()
-                    ),
-                  };
-                }),
-              );
-            }
+    const states: {
+      seq: number;
+      number: anchor.BN;
+      eligible: boolean;
+      whitelisted: boolean;
+    }[][] = await Promise.all(
+      chunks(Array.from(Array(ticketsFlattened.length).keys()), 1000).map(
+        async allIndexesInSlice => {
+          let states = [];
+          for (let i = 0; i < allIndexesInSlice.length; i += 100) {
+            console.log(
+              'Pulling states for slice',
+              allIndexesInSlice[i],
+              allIndexesInSlice[i + 100],
+            );
+            const slice = allIndexesInSlice
+              .slice(i, i + 100)
+              .map(index => ticketsFlattened[index]);
+            const result = await getMultipleAccounts(
+              anchorProgram.provider.connection,
+              slice.map(s => s.toBase58()),
+              'recent',
+            );
+            states = states.concat(
+              result.array.map(a => {
+                const el = anchorProgram.coder.accounts.decode(
+                  'FairLaunchTicket',
+                  a.data,
+                );
+                return {
+                  seq: el.seq.toNumber(),
+                  number: el.amount.toNumber(),
+                  eligible: !!(
+                    el.state.unpunched &&
+                    el.amount.toNumber() >=
+                      //@ts-ignore
+                      fairLaunchObj.currentMedian.toNumber()
+                  ),
+                  whitelisted: whitelist?.includes(el.buyer.toBase58()),
+                };
+              }),
+            );
+          }
 
-            return states;
-          },
-        ),
-      );
+          return states;
+        },
+      ),
+    );
 
     const statesFlat = states.flat();
     const token = new Token(
@@ -2379,16 +2639,37 @@ program
       statesFlat.filter(s => s.eligible).length,
     );
 
-    let chosen: { seq: number; eligible: boolean; chosen: boolean }[];
+    let chosen: {
+      seq: number;
+      eligible: boolean;
+      chosen: boolean;
+      whitelisted: boolean;
+    }[];
     if (numWinnersRemaining >= statesFlat.length) {
       console.log('More or equal nfts than winners, everybody wins.');
       chosen = statesFlat.map(s => ({ ...s, chosen: true }));
     } else {
       chosen = statesFlat.map(s => ({ ...s, chosen: false }));
 
+      console.log(
+        'Starting whitelist with',
+        numWinnersRemaining,
+        'winners remaining',
+      );
+      for (let i = 0; i < chosen.length; i++) {
+        if (
+          chosen[i].chosen != true &&
+          chosen[i].eligible &&
+          chosen[i].whitelisted
+        ) {
+          chosen[i].chosen = true;
+          numWinnersRemaining--;
+        }
+      }
+
       console.log('Doing lottery for', numWinnersRemaining);
       while (numWinnersRemaining > 0) {
-        const rand = Math.floor(Math.random() * (chosen.length));
+        const rand = Math.floor(Math.random() * chosen.length);
         if (chosen[rand].chosen != true && chosen[rand].eligible) {
           chosen[rand].chosen = true;
           numWinnersRemaining--;
@@ -2399,13 +2680,13 @@ program
     console.log('Lottery results', sorted);
 
     await Promise.all(
-      // each 8 entries is 1 byte, we want to send up 1000 bytes at a time.
+      // each 8 entries is 1 byte, we want to send up 10 bytes at a time.
       // be specific here.
-      chunks(Array.from(Array(sorted.length).keys()), 8 * 1000).map(
+      chunks(Array.from(Array(sorted.length).keys()), 8 * 10).map(
         async allIndexesInSlice => {
           const bytes = [];
           const correspondingArrayOfBits = [];
-          const startingOffset = allIndexesInSlice[0];
+          const startingOffset = Math.floor(allIndexesInSlice[0] / 8);
           let positionFromRight = 7;
           let currByte = 0;
           let currByteAsBits = [];
@@ -2474,12 +2755,20 @@ program
     '--keypair not provided',
   )
   .option('-f, --fair-launch <string>', 'fair launch id')
+  .option(
+    '-r, --rpc-url <string>',
+    'custom rpc url since this is a heavy command',
+  )
   .action(async (_, cmd) => {
-    const { env, keypair, fairLaunch } = cmd.opts();
+    const { env, keypair, fairLaunch, rpcUrl } = cmd.opts();
     const fairLaunchTicketSeqStart = 8 + 32 + 32 + 8 + 1 + 1;
     const fairLaunchTicketState = 8 + 32 + 32 + 8;
     const walletKeyPair = loadWalletKey(keypair);
-    const anchorProgram = await loadFairLaunchProgram(walletKeyPair, env);
+    const anchorProgram = await loadFairLaunchProgram(
+      walletKeyPair,
+      env,
+      rpcUrl,
+    );
     const fairLaunchObj = await anchorProgram.account.fairLaunch.fetch(
       fairLaunch,
     );
@@ -2497,43 +2786,53 @@ program
       },
     );
 
-    for (let i = 0; i < tickets.length; i++) {
-      const accountAndPubkey = tickets[i];
-      const { account, pubkey } = accountAndPubkey;
-      const state = account.data[fairLaunchTicketState];
-      if (state == 0) {
-        console.log('Missing sequence for ticket', pubkey.toBase58());
-        const [fairLaunchTicketSeqLookup, seqBump] =
-          await getFairLaunchTicketSeqLookup(
-            //@ts-ignore
-            fairLaunchObj.tokenMint,
-            new anchor.BN(
-              account.data.slice(
-                fairLaunchTicketSeqStart,
-                fairLaunchTicketSeqStart + 8,
-              ),
-              undefined,
-              'le',
-            ),
-          );
-
-        await anchorProgram.rpc.createTicketSeq(seqBump, {
-          accounts: {
-            fairLaunchTicketSeqLookup,
-            fairLaunch,
-            fairLaunchTicket: pubkey,
-            payer: walletKeyPair.publicKey,
-            systemProgram: anchor.web3.SystemProgram.programId,
-            rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-          },
-          options: {
-            commitment: 'single',
-          },
-          signers: [],
-        });
-        console.log('Created...');
-      }
-    }
+    await Promise.all(
+      chunks(Array.from(Array(tickets.length).keys()), 500).map(
+        async allIndexesInSlice => {
+          for (let i = 0; i < allIndexesInSlice.length; i++) {
+            const accountAndPubkey = tickets[allIndexesInSlice[i]];
+            const { account, pubkey } = accountAndPubkey;
+            const state = account.data[fairLaunchTicketState];
+            if (state == 0) {
+              console.log('Missing sequence for ticket', pubkey.toBase58());
+              const [fairLaunchTicketSeqLookup, seqBump] =
+                await getFairLaunchTicketSeqLookup(
+                  //@ts-ignore
+                  fairLaunchObj.tokenMint,
+                  new anchor.BN(
+                    account.data.slice(
+                      fairLaunchTicketSeqStart,
+                      fairLaunchTicketSeqStart + 8,
+                    ),
+                    undefined,
+                    'le',
+                  ),
+                );
+              try {
+                await anchorProgram.rpc.createTicketSeq(seqBump, {
+                  accounts: {
+                    fairLaunchTicketSeqLookup,
+                    fairLaunch,
+                    fairLaunchTicket: pubkey,
+                    payer: walletKeyPair.publicKey,
+                    systemProgram: anchor.web3.SystemProgram.programId,
+                    rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+                  },
+                  options: {
+                    commitment: 'single',
+                  },
+                  signers: [],
+                });
+              } catch (e) {
+                console.log('Skipping...');
+                console.error(e);
+              }
+              console.log('Created...');
+            }
+          }
+        },
+      ),
+    );
   });
 
 program
@@ -2549,11 +2848,20 @@ program
     '--keypair not provided',
   )
   .option('-f, --fair-launch <string>', 'fair launch id')
+
+  .option(
+    '-r, --rpc-url <string>',
+    'custom rpc url since this is a heavy command',
+  )
   .action(async (options, cmd) => {
-    const { env, fairLaunch, keypair } = cmd.opts();
+    const { env, fairLaunch, keypair, rpcUrl } = cmd.opts();
 
     const walletKeyPair = loadWalletKey(keypair);
-    const anchorProgram = await loadFairLaunchProgram(walletKeyPair, env);
+    const anchorProgram = await loadFairLaunchProgram(
+      walletKeyPair,
+      env,
+      rpcUrl,
+    );
 
     const fairLaunchObj = await anchorProgram.account.fairLaunch.fetch(
       fairLaunch,
@@ -2575,6 +2883,8 @@ program
       );
     }
 
+    //@ts-ignore
+    console.log('UUID', fairLaunchObj.data.uuid);
     //@ts-ignore
     console.log('Token Mint', fairLaunchObj.tokenMint.toBase58());
     //@ts-ignore
@@ -2821,11 +3131,19 @@ program
     '--keypair not provided',
   )
   .option('-f, --fair-launch <string>', 'fair launch id')
+  .option(
+    '-r, --rpc-url <string>',
+    'custom rpc url since this is a heavy command',
+  )
   .action(async (options, cmd) => {
-    const { env, fairLaunch, keypair } = cmd.opts();
+    const { env, fairLaunch, keypair, rpcUrl } = cmd.opts();
 
     const walletKeyPair = loadWalletKey(keypair);
-    const anchorProgram = await loadFairLaunchProgram(walletKeyPair, env);
+    const anchorProgram = await loadFairLaunchProgram(
+      walletKeyPair,
+      env,
+      rpcUrl,
+    );
 
     const fairLaunchObj = await anchorProgram.account.fairLaunch.fetch(
       fairLaunch,

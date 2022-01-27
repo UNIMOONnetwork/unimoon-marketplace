@@ -1,30 +1,11 @@
 .App-Bar {
   padding: 0px;
   justify-content: space-between !important;
-}
 
-.app-bar-box {
-  background: #121212;
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  // padding: 8px 10px;
-  height: 56px;
-
-  .create {
-    background: radial-gradient(ellipse at top left, #C7479C, transparent 50%), radial-gradient(ellipse at top right, #6BDABB, transparent 70%), radial-gradient(ellipse at bottom left, #5085E3, transparent 75%), radial-gradient(ellipse at bottom, #6BDABB, transparent 50%), radial-gradient(ellipse at bottom right, #C7479C, transparent 87%);
-    border-radius: 20px;
-    height: 40px;
-    width: 130px;
-    background-color: white;
-    font-size: 15px;
+  button.ant-btn:not(.connector) {
+    height: 32px;
+    background: none;
   }
-}
-
-.app-left {
-  padding: 8px 10px;
 }
 
 .title {
@@ -48,7 +29,9 @@
   height: 40px;
   margin-right: 14px;
 }
-
+.wallet-wrapper {
+  padding-right: 0.7rem;
+}
 .app-btn {
   font-style: normal;
   font-weight: normal;

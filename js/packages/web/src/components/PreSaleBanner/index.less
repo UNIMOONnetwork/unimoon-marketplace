@@ -1,6 +1,5 @@
-
 .presale-container {
-  background-color: #B29995;
+  background-color: #b29995;
   background-repeat: no-repeat;
   background-position-y: center;
   min-height: 220px;
@@ -12,17 +11,17 @@
 
 .explore {
   display: flex;
-  padding: 10px
+  padding: 10px;
 }
 
 .explore .square {
+  max-width: 355px;
+  min-width: 355px;
+  border: 1px #303030 solid;
+  @media (max-width: 375px) {
     max-width: 355px;
     min-width: 355px;
-    border: 1px #303030 solid;
-    @media (max-width: 375px) {
-      max-width: 355px;
-      min-width: 355px;
-    }
+  }
 }
 
 .presale-title {
@@ -47,7 +46,11 @@
 }
 
 .action-btn {
-  background: radial-gradient(ellipse at top left, #C7479C, transparent 50%), radial-gradient(ellipse at top right, #6BDABB, transparent 70%), radial-gradient(ellipse at bottom left, #5085E3, transparent 75%), radial-gradient(ellipse at bottom, #6BDABB, transparent 50%), radial-gradient(ellipse at bottom right, #C7479C, transparent 87%);
+  background: radial-gradient(ellipse at top left, #c7479c, transparent 50%),
+    radial-gradient(ellipse at top right, #6bdabb, transparent 70%),
+    radial-gradient(ellipse at bottom left, #5085e3, transparent 75%),
+    radial-gradient(ellipse at bottom, #6bdabb, transparent 50%),
+    radial-gradient(ellipse at bottom right, #c7479c, transparent 87%) !important;
   border-radius: 20px;
   background-color: white;
   font-size: 24px;

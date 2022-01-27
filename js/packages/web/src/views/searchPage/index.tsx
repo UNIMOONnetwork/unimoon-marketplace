@@ -16,9 +16,9 @@ import { useMeta } from '../../contexts';
 // import profileService, { Profile } from '../../services/profile';
 
 // import Header from '../../components/Header';
-import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { AuctionRenderCard } from '../../components/AuctionRenderCard';
 import { PlaceholderAssetCard } from '../../components/PlaceholderAssetCard';
+import { CardLoader } from '../../components/MyLoader';
 
 const { TabPane } = Tabs;
 const { Content } = Layout;
@@ -35,23 +35,18 @@ export const AuctionsView = (props: {
 }) => {
   const { isLoading, auctions } = props;
   return (
-    <>
-      {!isLoading ? (
-        auctions && auctions.length ? (
-          auctions.slice(0, 12).map((m: any, idx: any) => {
-            const id = m.auction.pubkey.toString();
-            return (
-              <Link to={`/bid/${id}`} key={idx}>
-                <AuctionRenderCard key={id} auctionView={m} />
-              </Link>
-            );
-          })
-        ) : (
-          <PlaceholderAssetCard />
-        )
-      ) : ""
-      }
-    </>
+    <div className="artwork-grid">
+      {isLoading && [...Array(10)].map((_, idx) => <CardLoader key={idx} />)}
+      {!isLoading &&
+        auctions.map(auction => (
+          <Link
+            key={auction.auction.pubkey}
+            to={`/auction/${auction.auction.pubkey}`}
+          >
+            <AuctionRenderCard auctionView={auction} />
+          </Link>
+        ))}
+    </div>
   );
 };
 
@@ -112,27 +107,24 @@ export const SearchPage = () => {
                 onTabClick={key => setActiveKey(key as SearchPageState)}
               >
                 <TabPane
-                  tab={
-                    <span className="tab-title">Auctions</span>
-                  }
+                  tab={<span className="tab-title">Auctions</span>}
                   className="tab-pane"
                   key={SearchPageState.Auctions}
                 >
-                  <AuctionsView isLoading={isLoading} auctions={searchAuctions} />
+                  <AuctionsView
+                    isLoading={isLoading}
+                    auctions={searchAuctions}
+                  />
                 </TabPane>
                 <TabPane
                   tab={<span className="tab-title">Collections</span>}
                   key={SearchPageState.Collections}
-                >
-                  
-                </TabPane>
+                ></TabPane>
                 {connected && (
                   <TabPane
                     tab={<span className="tab-title">Users</span>}
                     key={SearchPageState.Users}
-                  >
-                    
-                  </TabPane>
+                  ></TabPane>
                 )}
               </Tabs>
             </Row>
