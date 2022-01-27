@@ -6,7 +6,7 @@ import {
   ProfileByIDRequest,
   Profile,
 } from '../../services/profile/profile.types';
-import profileService from '../../services/profile';
+// import profileService from '../../services/profile';
 
 import {
   AuctionView,

@@ -13,7 +13,7 @@ import { Redirect } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 // import { useProfileContext } from '../../contexts/profile';
-import profileService from '../../services/profile';
+// import profileService from '../../services/profile';
 // import { useNotiStack } from '../../components/NotiStack';
 // import Input from '../../components/Input';
 // import { Preview } from '../../components/Preview';
