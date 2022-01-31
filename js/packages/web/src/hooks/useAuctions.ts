@@ -12,6 +12,7 @@ import {
   StringPublicKey,
   AuctionDataExtended,
   createPipelineExecutor,
+  BidStateType,
 } from '@oyster/common';
 import { useWallet } from '@solana/wallet-adapter-react';
 import BN from 'bn.js';
@@ -29,6 +30,7 @@ import {
   SafetyDepositConfig,
   WinningConfigType,
   AuctionViewItem,
+  AuctionCache,
 } from '@oyster/common/dist/lib/models/metaplex/index';
 
 export enum AuctionViewState {
@@ -57,6 +59,7 @@ export interface AuctionView {
   vault: ParsedAccount<Vault>;
   totallyComplete: boolean;
   isInstantSale: boolean;
+  isDutchAuction: boolean;
 }
 
 type CachedRedemptionKeys = Record<
@@ -122,6 +125,10 @@ export const useAuctions = (state?: AuctionViewState) => {
   const cachedRedemptionKeys = useCachedRedemptionKeysByWallet();
   const auctions = useStoreAuctionsList();
 
+  const [auctionByMetadata, setAuctionByMetadata] = useState<
+    Map<string, AuctionView>
+  >(new Map());
+
   const {
     auctionManagersByAuction,
     safetyDepositBoxesByVaultAndIndex,
@@ -164,6 +171,11 @@ export const useAuctions = (state?: AuctionViewState) => {
       );
       if (auctionView) {
         auctionViews.push(auctionView);
+        auctionByMetadata.set(
+          auctionView.thumbnail.metadata.pubkey,
+          auctionView,
+        );
+        setAuctionByMetadata(auctionByMetadata);
       }
     });
 
@@ -190,7 +202,7 @@ export const useAuctions = (state?: AuctionViewState) => {
     setAuctionViews,
   ]);
 
-  return auctionViews;
+  return { auctionViews, auctionByMetadata };
 };
 
 function sortByEnded(a: AuctionView, b: AuctionView) {
@@ -205,9 +217,26 @@ function isInstantSale(
   auction: ParsedAccount<AuctionData>,
 ) {
   return !!(
-    auctionDataExt?.info.instantSalePrice &&
-    auction.info.priceFloor.minPrice &&
-    auctionDataExt?.info.instantSalePrice.eq(auction.info.priceFloor.minPrice)
+    (auctionDataExt?.info.instantSalePrice &&
+      auction.info.priceFloor.minPrice &&
+      auctionDataExt?.info.instantSalePrice.eq(
+        auction.info.priceFloor.minPrice,
+      )) ||
+    auction.info.bidState.type === BidStateType.DutchAuction ||
+    !auction.info.endAuctionAt
+  );
+}
+
+function isDutchAuction(
+  auctionDataExt: ParsedAccount<AuctionDataExtended> | null,
+  auction: ParsedAccount<AuctionData>,
+) {
+  return !!(
+    (auctionDataExt?.info.instantSalePrice &&
+      auction.info.priceFloor.minPrice &&
+      auction.info.priceFloor.minPrice <
+        auctionDataExt?.info.instantSalePrice) ||
+    auction.info.bidState.type === BidStateType.DutchAuction
   );
 }
 
@@ -424,6 +453,7 @@ export function processAccountsIntoAuctionView(
         : null);
 
     view.isInstantSale = isInstantSale(auctionDataExt, auction);
+    view.isDutchAuction = isDutchAuction(auctionDataExt, auction);
 
     view.totallyComplete = !!(
       view.thumbnail &&

@@ -16,8 +16,8 @@ export const isMetadataPartOfStore = (
 
   return m.info.data.creators.some(
     c =>
-      c.verified &&
-      (store?.info.public ||
-        whitelistedCreatorsByCreator[c.address]?.info?.activated),
+      c.verified ||
+      store?.info.public ||
+      whitelistedCreatorsByCreator[c.address]?.info?.activated,
   );
 };

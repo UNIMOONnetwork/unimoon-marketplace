@@ -30,6 +30,7 @@ import crypto from 'crypto';
 
 import { AR_SOL_HOLDER_ID } from '../utils/ids';
 import BN from 'bn.js';
+import { appendAddMembersInstruction } from './collection/addMembers';
 
 const RESERVED_TXN_MANIFEST = 'manifest.json';
 const RESERVED_METADATA = 'metadata.json';
@@ -87,7 +88,13 @@ export const mintNFT = async (
     properties: any;
     creators: Creator[] | null;
     sellerFeeBasisPoints: number;
+    collection?: {
+      name: string;
+      family: string;
+      collections: StringPublicKey;
+    };
   },
+  collectionAddress: string | undefined,
   progressCallback: Dispatch<SetStateAction<number>>,
   maxSupply?: number,
 ): Promise<{
@@ -112,6 +119,11 @@ export const mintNFT = async (
           share: creator.share,
         };
       }),
+    },
+    collection: {
+      name: metadata.collection?.name,
+      family: metadata.collection?.family,
+      collections: metadata.collection?.collections,
     },
   };
 
@@ -199,6 +211,16 @@ export const mintNFT = async (
   //     lamports: 0.5 * LAMPORTS_PER_SOL // block.feeCalculator.lamportsPerSignature * 3 + mintRent, // TODO
   //   }),
   // );
+  // TODO: Add item to collection
+  if (collectionAddress) {
+    var collectionKey = toPublicKey(collectionAddress);
+    appendAddMembersInstruction(
+      wallet,
+      collectionKey,
+      instructions,
+      toPublicKey(metadataAccount),
+    );
+  }
 
   const { txid } = await sendTransactionWithRetry(
     connection,

@@ -12,3 +12,6 @@ export { SearchPage } from './searchPage';
 export { ProfilePage } from './profilePage';
 export { EditProfilePage } from './profilePage/edit';
 export { RankBoard } from './rankBoard';
+export { CreateCollectionView } from './createCollectionView';
+export { CollectionView } from './collectionView';
+export { CollectionsView } from './collectionsView';

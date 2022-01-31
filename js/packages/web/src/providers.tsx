@@ -11,7 +11,8 @@ import { AppLayout } from './components/Layout';
 import { LoaderProvider } from './components/Loader';
 import { CoingeckoProvider } from './contexts/coingecko';
 import { SPLTokenListProvider } from './contexts/tokenList';
-import { ProfileProvider } from './contexts/profile';
+import { ProfileProvider } from './contexts/profile/profile.context';
+import { CollectionProvider } from './contexts/collection/collection.context';
 
 export const Providers: FC = ({ children }) => {
   return (
@@ -27,7 +28,11 @@ export const Providers: FC = ({ children }) => {
                 <MetaProvider>
                   <LoaderProvider>
                     <ConfettiProvider>
-                      <AppLayout>{children}</AppLayout>
+		    	              <CollectionProvider>
+                          <ProfileProvider>
+	                          <AppLayout>{children}</AppLayout>
+			                    </ProfileProvider>
+                        </CollectionProvider>
                     </ConfettiProvider>
                   </LoaderProvider>
                 </MetaProvider>

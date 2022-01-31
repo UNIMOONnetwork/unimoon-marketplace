@@ -551,13 +551,13 @@ export const AuctionCreateView = () => {
     />
   );
 
-  const winnersStep = (
-    <NumberOfWinnersStep
-      attributes={attributes}
-      setAttributes={setAttributes}
-      confirm={() => gotoNextStep()}
-    />
-  );
+  // const winnersStep = (
+  //   <NumberOfWinnersStep
+  //     attributes={attributes}
+  //     setAttributes={setAttributes}
+  //     confirm={() => gotoNextStep()}
+  //   />
+  // );
 
   const priceAuction = (
     <PriceAuction
@@ -591,14 +591,14 @@ export const AuctionCreateView = () => {
     />
   );
 
-  const tierTableStep = (
-    <TierTableStep
-      attributes={tieredAttributes}
-      setAttributes={setTieredAttributes}
-      maxWinners={attributes.winnersCount}
-      confirm={() => gotoNextStep()}
-    />
-  );
+  // const tierTableStep = (
+  //   <TierTableStep
+  //     attributes={tieredAttributes}
+  //     setAttributes={setTieredAttributes}
+  //     maxWinners={attributes.winnersCount}
+  //     confirm={() => gotoNextStep()}
+  //   />
+  // );
 
   const reviewStep = (
     <ReviewStep
@@ -658,7 +658,7 @@ export const AuctionCreateView = () => {
       ['Publish', waitStep],
       [undefined, congratsStep],
     ],
-    [AuctionCategory.Tiered]: [
+    /*[AuctionCategory.Tiered]: [
       ['Category', categoryStep],
       ['Winners', winnersStep],
       ['Tiers', tierTableStep],
@@ -669,7 +669,7 @@ export const AuctionCreateView = () => {
       ['Review', reviewStep],
       ['Publish', waitStep],
       [undefined, congratsStep],
-    ],
+    ],*/
   };
 
   return (
@@ -765,7 +765,7 @@ const CategoryStep = (props: {
               </div>
             </Button>
           </Row>
-          <Row>
+          {/* <Row>
             <Button
               className="type-btn"
               size="large"
@@ -779,7 +779,7 @@ const CategoryStep = (props: {
                 </div>
               </div>
             </Button>
-          </Row>
+          </Row> */}
           <Row>
             <Button
               className="type-btn"
@@ -1075,6 +1075,7 @@ const CopiesStep = (props: {
   );
 };
 
+/*
 const NumberOfWinnersStep = (props: {
   attributes: AuctionState;
   setAttributes: (attr: AuctionState) => void;
@@ -1153,6 +1154,7 @@ const NumberOfWinnersStep = (props: {
     </>
   );
 };
+*/
 
 const PriceAuction = (props: {
   attributes: AuctionState;
@@ -1544,6 +1546,7 @@ const EndingPhaseAuction = (props: {
   );
 };
 
+/*
 const TierTableStep = (props: {
   attributes: TieredAuctionState;
   setAttributes: (attr: TieredAuctionState) => void;
@@ -1826,6 +1829,7 @@ const TierTableStep = (props: {
     </>
   );
 };
+*/
 
 const ParticipationStep = (props: {
   attributes: AuctionState;

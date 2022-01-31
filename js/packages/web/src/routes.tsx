@@ -13,6 +13,9 @@ import {
   HomeView,
   StaticPageView,
   SearchPage,
+  CreateCollectionView,
+  CollectionView,
+  CollectionsView,
   ProfilePage,
   EditProfilePage,
   RankBoard,
@@ -29,14 +32,14 @@ export function Routes() {
       <HashRouter basename={'/'}>
         <Providers>
           <Switch>
-            {shouldEnableNftPacks && (
+            {(
               <Route
                 exact
                 path="/admin/pack/create/:stepParam?"
                 component={() => <PackCreateView />}
               />
             )}
-            {shouldEnableNftPacks && (
+            {(
               <Route
                 exact
                 path="/pack/:packKey"
@@ -79,7 +82,7 @@ export function Routes() {
               component={() => <BillingView />}
             />
             <Route path="/about" component={() => <StaticPageView />} />
-	    <Route exact path="/search" component={() => <SearchPage />} />
+	          <Route exact path="/search" component={() => <SearchPage />} />
             <Route
               exact
               path="/profile/:id"
@@ -92,6 +95,15 @@ export function Routes() {
             />
             <Route exact path="/rank-board" component={() => <RankBoard />} />
             <Route path="/" component={() => <HomeView />} />
+	            <Route exact path="/collections">
+                <CollectionsView />
+              </Route>
+              <Route exact path="/collections/:creator/:name">
+                <CollectionView />
+              </Route>
+	            <Route exact path="/create/collection">
+                <CreateCollectionView />
+              </Route>
           </Switch>
         </Providers>
       </HashRouter>
