@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Typography } from '@material-ui/core';
-
-import { Header } from '../../components/Header';
-import FilterBar from '../../components/FilterBar';
-import { CollectionCard } from '../../components/CollectionCard';
-import { LoadingCard } from '../../components/LoadingCard';
+import { Col, Layout } from 'antd';
+import Masonry from 'react-masonry-css';
 import { ICollectionData } from '../../actions/collection/schema';
 import { useCollections } from '../../hooks';
+import { CollectionCard } from '../../components/CollectionCard';
+import { CardLoader } from '../../components/MyLoader';
 
+const { Content } = Layout;
 const filters = [];
 
 const orders = [
@@ -88,74 +87,40 @@ export const CollectionsView = () => {
     }
   }, [collections]);
 
+  const breakpointColumnsObj = {
+    default: 4,
+    1100: 3,
+    700: 2,
+    500: 1,
+  };
+
   return (
     <>
-      <Header />
-      <Grid className="collections-view-container" item xs={12}>
-        <div className="header">
-          <div className="gt-italic-normal-grey f250 label">Collections</div>
-          <div className="gt-italic-normal-grey f32 count"></div>
-        </div>
-
-        <FilterBar
-          filter={filter}
-          filters={filters}
-          order={order}
-          orders={orders}
-          search={search}
-          filterAction={value => setFilter(value)}
-          searchAction={value => {
-            setSearch(value);
-
-            const result = sortCollection(order);
-            searchAction(
-              result
-                .filter(item => item.name.toLowerCase().includes(value))
-                .slice(0, 12),
-            );
-
-            setScrollPageNum(1);
-          }}
-          orderAction={value => {
-            setOrder(value);
-
-            const result = sortCollection(value);
-            searchAction(
-              result
-                .filter(item => item.name.toLowerCase().includes(search))
-                .slice(0, 12),
-            );
-
-            setScrollPageNum(1);
-          }}
-        />
-
-        <Grid container style={{ justifyContent: 'center' }}>
-          {!collectionLoading ? (
-            searchCollections && searchCollections.length > 0 ? (
-              searchCollections.map((item, index) => (
-                <CollectionCard {...item} key={index} />
-              ))
-            ) : (
-              <Typography
-                variant="h6"
-                className="suisse-normal-grey"
-                style={{ marginTop: 50 }}
-              >
-                No filtered collections
-              </Typography>
-            )
-          ) : (
-            Array(4)
-              .fill({})
-              .map((_, index) => (
-                <div key={index}>
-                  <LoadingCard width={300} height={200} />
-                </div>
-              ))
-          )}
-        </Grid>
-      </Grid>
+      <Layout style={{ margin: 0, marginTop: 30 }}>
+        <Content style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <Col style={{ width: '100%', marginTop: 10 }}>
+            <Masonry
+              breakpointCols={breakpointColumnsObj}
+              className="my-masonry-grid artists-masonry"
+              columnClassName="my-masonry-grid_column"
+            >
+              {!collectionLoading ? (
+                searchCollections && searchCollections.length > 0 ? (
+                  searchCollections.map((item, index) => (
+                    <CollectionCard {...item} key={index} />
+                  ))
+                ) : (
+                  <span>No filtered collections</span>
+                )
+              ) : (
+                Array(4)
+                  .fill({})
+                  .map((_, index) => <CardLoader key={index} />)
+              )}
+            </Masonry>
+          </Col>
+        </Content>
+      </Layout>
     </>
   );
 };
