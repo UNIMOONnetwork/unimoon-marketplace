@@ -11,8 +11,8 @@ import { AppLayout } from './components/Layout';
 import { LoaderProvider } from './components/Loader';
 import { CoingeckoProvider } from './contexts/coingecko';
 import { SPLTokenListProvider } from './contexts/tokenList';
-import { ProfileProvider } from './contexts/profile/profile.context';
-import { CollectionProvider } from './contexts/collection/collection.context';
+import { ProfileProvider } from './contexts/profile';
+import { CollectionProvider } from './contexts/collection';
 
 export const Providers: FC = ({ children }) => {
   return (

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { StringPublicKey } from '@oyster/common';
 
 import { HistoryData } from '../types';
-import { useCollectionsContext } from '../contexts/collection/collection.context';
+import { useCollectionsContext } from '../contexts/collection';
 
 export const useCollections = (
   creatorKey?: StringPublicKey | null | undefined,

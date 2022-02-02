@@ -104,7 +104,7 @@ function RunAction({
 }
 
 export async function getPersonalEscrowAta(
-  wallet: WalletSigner | undefined
+  wallet: WalletSigner | undefined,
 ): Promise<StringPublicKey | undefined> {
   const PROGRAM_IDS = programIds();
   if (!wallet?.publicKey) return;
@@ -188,8 +188,8 @@ export function useSettlementAuctions({
   const walletPubkey = wallet?.publicKey?.toBase58();
   const { bidderPotsByAuctionAndBidder, pullAuctionPage } = useMeta();
   const auctionsNeedingSettling = [
-    ...useAuctions(AuctionViewState.Ended),
-    ...useAuctions(AuctionViewState.BuyNow),
+    ...useAuctions(AuctionViewState.Ended).auctionViews,
+    ...useAuctions(AuctionViewState.BuyNow).auctionViews,
   ];
 
   const [validDiscoveredEndedAuctions, setValidDiscoveredEndedAuctions] =
@@ -332,7 +332,11 @@ export function useSettlementAuctions({
                 accountByMint,
               );
               // accept funds (open WSOL & close WSOL) only if Auction currency SOL
-              if (wallet.publicKey && auctionView.auction.info.tokenMint == WRAPPED_SOL_MINT.toBase58()) {
+              if (
+                wallet.publicKey &&
+                auctionView.auction.info.tokenMint ==
+                  WRAPPED_SOL_MINT.toBase58()
+              ) {
                 const ata = await getPersonalEscrowAta(wallet);
                 if (ata) await closePersonalEscrow(connection, wallet, ata);
               }
@@ -356,11 +360,11 @@ export function Notifications() {
     safetyDepositBoxesByVaultAndIndex,
     pullAllSiteData,
   } = useMeta();
-  const possiblyBrokenAuctionManagerSetups = useAuctions(
+  const { auctionViews: possiblyBrokenAuctionManagerSetups } = useAuctions(
     AuctionViewState.Defective,
   );
 
-  const upcomingAuctions = useAuctions(AuctionViewState.Upcoming);
+  const upcomingAuctions = useAuctions(AuctionViewState.Upcoming).auctionViews;
   const connection = useConnection();
   const wallet = useWallet();
   const { accountByMint } = useUserAccounts();
@@ -368,7 +372,6 @@ export function Notifications() {
   const notifications: NotificationCard[] = [];
 
   const walletPubkey = wallet.publicKey?.toBase58() || '';
-
 
   useCollapseWrappedSol({ connection, wallet, notifications });
 
@@ -463,6 +466,7 @@ export function Notifications() {
 
   const metaNeedsApproving = useMemo(
     () =>
+      metadata &&
       metadata.filter(m => {
         return (
           m.info.data.creators &&
@@ -567,7 +571,9 @@ export function Notifications() {
   const justContent = (
     <Popover placement="bottomLeft" content={content} trigger="click">
       <img src={'/bell.svg'} style={{ cursor: 'pointer' }} />
-      {!!notifications.length && <div className="mobile-notification">{notifications.length - 1}</div>}
+      {!!notifications.length && (
+        <div className="mobile-notification">{notifications.length - 1}</div>
+      )}
     </Popover>
   );
 

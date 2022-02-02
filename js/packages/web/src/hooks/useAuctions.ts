@@ -1,37 +1,35 @@
 import {
-  ParsedAccount,
-  Metadata,
-  SafetyDepositBox,
   AuctionData,
+  AuctionDataExtended,
   AuctionState,
   BidderMetadata,
   BidderPot,
-  Vault,
+  createPipelineExecutor,
   MasterEditionV1,
   MasterEditionV2,
+  Metadata,
+  ParsedAccount,
+  SafetyDepositBox,
   StringPublicKey,
-  AuctionDataExtended,
-  createPipelineExecutor,
-  BidStateType,
+  Vault,
 } from '@oyster/common';
-import { useWallet } from '@solana/wallet-adapter-react';
-import BN from 'bn.js';
-import { useEffect, useMemo, useState } from 'react';
-import { useMeta } from '../contexts';
 import {
   AuctionManager,
   AuctionManagerStatus,
   AuctionManagerV1,
   AuctionManagerV2,
+  AuctionViewItem,
   BidRedemptionTicket,
   BidRedemptionTicketV2,
   getBidderKeys,
   MetaplexKey,
   SafetyDepositConfig,
   WinningConfigType,
-  AuctionViewItem,
-  AuctionCache,
 } from '@oyster/common/dist/lib/models/metaplex/index';
+import { useWallet } from '@solana/wallet-adapter-react';
+import BN from 'bn.js';
+import { useEffect, useMemo, useState } from 'react';
+import { useMeta } from '../contexts';
 
 export enum AuctionViewState {
   Live = '0',
@@ -59,7 +57,6 @@ export interface AuctionView {
   vault: ParsedAccount<Vault>;
   totallyComplete: boolean;
   isInstantSale: boolean;
-  isDutchAuction: boolean;
 }
 
 type CachedRedemptionKeys = Record<
@@ -217,26 +214,9 @@ function isInstantSale(
   auction: ParsedAccount<AuctionData>,
 ) {
   return !!(
-    (auctionDataExt?.info.instantSalePrice &&
-      auction.info.priceFloor.minPrice &&
-      auctionDataExt?.info.instantSalePrice.eq(
-        auction.info.priceFloor.minPrice,
-      )) ||
-    auction.info.bidState.type === BidStateType.DutchAuction ||
-    !auction.info.endAuctionAt
-  );
-}
-
-function isDutchAuction(
-  auctionDataExt: ParsedAccount<AuctionDataExtended> | null,
-  auction: ParsedAccount<AuctionData>,
-) {
-  return !!(
-    (auctionDataExt?.info.instantSalePrice &&
-      auction.info.priceFloor.minPrice &&
-      auction.info.priceFloor.minPrice <
-        auctionDataExt?.info.instantSalePrice) ||
-    auction.info.bidState.type === BidStateType.DutchAuction
+    auctionDataExt?.info.instantSalePrice &&
+    auction.info.priceFloor.minPrice &&
+    auctionDataExt?.info.instantSalePrice.eq(auction.info.priceFloor.minPrice)
   );
 }
 
@@ -453,7 +433,6 @@ export function processAccountsIntoAuctionView(
         : null);
 
     view.isInstantSale = isInstantSale(auctionDataExt, auction);
-    view.isDutchAuction = isDutchAuction(auctionDataExt, auction);
 
     view.totallyComplete = !!(
       view.thumbnail &&

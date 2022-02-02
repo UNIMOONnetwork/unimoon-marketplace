@@ -60,8 +60,8 @@ export const ENDPOINTS: Array<Endpoint> = [
   {
     name: 'devnet',
     label: 'devnet',
-    // url: clusterApiUrl('devnet'),
-    url: 'https://solana--devnet.datahub.figment.io/apikey/86c25bf65ad3a07a1eb7371a287fa803/',
+    url: clusterApiUrl('devnet'),
+    // url: 'https://solana--devnet.datahub.figment.io/apikey/86c25bf65ad3a07a1eb7371a287fa803/',
     chainId: ChainId.Devnet,
   },
 ];
