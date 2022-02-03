@@ -104,7 +104,7 @@ function RunAction({
 }
 
 export async function getPersonalEscrowAta(
-  wallet: WalletSigner | undefined
+  wallet: WalletSigner | undefined,
 ): Promise<StringPublicKey | undefined> {
   const PROGRAM_IDS = programIds();
   if (!wallet?.publicKey) return;
@@ -188,8 +188,8 @@ export function useSettlementAuctions({
   const walletPubkey = wallet?.publicKey?.toBase58();
   const { bidderPotsByAuctionAndBidder, pullAuctionPage } = useMeta();
   const auctionsNeedingSettling = [
-    ...useAuctions(AuctionViewState.Ended),
-    ...useAuctions(AuctionViewState.BuyNow),
+    ...useAuctions(AuctionViewState.Ended).auctionViews,
+    ...useAuctions(AuctionViewState.BuyNow).auctionViews,
   ];
 
   const [validDiscoveredEndedAuctions, setValidDiscoveredEndedAuctions] =
@@ -332,7 +332,11 @@ export function useSettlementAuctions({
                 accountByMint,
               );
               // accept funds (open WSOL & close WSOL) only if Auction currency SOL
-              if (wallet.publicKey && auctionView.auction.info.tokenMint == WRAPPED_SOL_MINT.toBase58()) {
+              if (
+                wallet.publicKey &&
+                auctionView.auction.info.tokenMint ==
+                  WRAPPED_SOL_MINT.toBase58()
+              ) {
                 const ata = await getPersonalEscrowAta(wallet);
                 if (ata) await closePersonalEscrow(connection, wallet, ata);
               }
@@ -358,9 +362,11 @@ export function Notifications() {
   } = useMeta();
   const possiblyBrokenAuctionManagerSetups = useAuctions(
     AuctionViewState.Defective,
-  );
+  ).auctionViews;
 
-  const upcomingAuctions = useAuctions(AuctionViewState.Upcoming);
+  const { auctionViews: upcomingAuctions } = useAuctions(
+    AuctionViewState.Upcoming,
+  );
   const connection = useConnection();
   const wallet = useWallet();
   const { accountByMint } = useUserAccounts();
@@ -368,7 +374,6 @@ export function Notifications() {
   const notifications: NotificationCard[] = [];
 
   const walletPubkey = wallet.publicKey?.toBase58() || '';
-
 
   useCollapseWrappedSol({ connection, wallet, notifications });
 
@@ -567,7 +572,9 @@ export function Notifications() {
   const justContent = (
     <Popover placement="bottomLeft" content={content} trigger="click">
       <img src={'/bell.svg'} style={{ cursor: 'pointer' }} />
-      {!!notifications.length && <div className="mobile-notification">{notifications.length - 1}</div>}
+      {!!notifications.length && (
+        <div className="mobile-notification">{notifications.length - 1}</div>
+      )}
     </Popover>
   );
 

@@ -13,9 +13,9 @@ import {
   HomeView,
   StaticPageView,
   SearchPage,
-  CreateCollectionView,
-  CollectionView,
-  CollectionsView,
+  CreateCollection,
+  Collection,
+  Collections,
   ProfilePage,
   EditProfilePage,
   RankBoard,
@@ -82,7 +82,7 @@ export function Routes() {
               component={() => <BillingView />}
             />
             <Route path="/about" component={() => <StaticPageView />} />
-	    <Route exact path="/search" component={() => <SearchPage />} />
+            <Route exact path="/search" component={() => <SearchPage />} />
             <Route
               exact
               path="/profile/:id"
@@ -95,15 +95,15 @@ export function Routes() {
             />
             <Route exact path="/rank-board" component={() => <RankBoard />} />
             <Route path="/" component={() => <HomeView />} />
-	            <Route exact path="/collections">
-                <CollectionsView />
-              </Route>
-              <Route exact path="/collections/:creator/:name">
-                <CollectionView />
-              </Route>
-	            <Route exact path="/create/collection">
-                <CreateCollectionView />
-              </Route>
+            <Route exact path="/collections">
+              <Collection />
+            </Route>
+            <Route exact path="/collections/:creator/:name">
+              <Collection />
+            </Route>
+            <Route exact path="/create/collection">
+              <CreateCollection />
+            </Route>
           </Switch>
         </Providers>
       </HashRouter>

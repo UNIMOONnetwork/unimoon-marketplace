@@ -12,7 +12,7 @@ import { useCollections } from '../../hooks';
 const MAX_SIZE_DEFAULT = 200;
 const MAX_SIZE_LIMIT = 200;
 
-export const CreateCollectionView = () => {
+export const CreateCollection = () => {
   const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();

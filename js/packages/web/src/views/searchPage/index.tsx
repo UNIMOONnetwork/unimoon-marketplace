@@ -63,8 +63,8 @@ export const SearchPage = () => {
   const [value, setValue] = useState(0);
   // const [profiles, setProfiles] = useState<Profile[]>([]);
 
-  const auctionsLive = useAuctions(AuctionViewState.Live);
-  const auctionsEnded = useAuctions(AuctionViewState.Ended);
+  const { auctionViews: auctionsLive } = useAuctions(AuctionViewState.Live);
+  const { auctionViews: auctionsEnded } = useAuctions(AuctionViewState.Ended);
 
   const liveAuctions = auctionsLive.sort(
     (a, b) =>

@@ -320,7 +320,7 @@ function InnerAnalytics({ mint }: { mint: MintInfo }) {
   const totalNFTs = metadata.length;
   // const totalMarketplaces = Object.values(stores).length;
 
-  const auctionViews = useAuctions();
+  const { auctionViews } = useAuctions();
 
   return (
     <Content>

@@ -90,7 +90,7 @@ export const StaticPage = (props: {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   });
-  const auctions = useAuctions(AuctionViewState.Live);
+  const { auctionViews: auctions } = useAuctions(AuctionViewState.Live);
   const { isLoading } = useMeta();
   const breakpointColumnsObj = {
     default: 4,

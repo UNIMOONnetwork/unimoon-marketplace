@@ -64,8 +64,8 @@ export const ProfilePage = () => {
   const created = useCreatorArts(profile?.ownerId);
   const owned = useUserArts();
 
-  const auctionsLive = useAuctions(AuctionViewState.Live);
-  const auctionsEnded = useAuctions(AuctionViewState.Ended);
+  const { auctionViews: auctionsLive } = useAuctions(AuctionViewState.Live);
+  const { auctionViews: auctionsEnded } = useAuctions(AuctionViewState.Ended);
 
   const liveAuctions = auctionsLive.sort(
     (a, b) =>

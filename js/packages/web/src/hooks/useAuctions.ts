@@ -122,6 +122,10 @@ export const useAuctions = (state?: AuctionViewState) => {
   const cachedRedemptionKeys = useCachedRedemptionKeysByWallet();
   const auctions = useStoreAuctionsList();
 
+  const [auctionByMetadata, setAuctionByMetadata] = useState<
+    Map<string, AuctionView>
+  >(new Map());
+
   const {
     auctionManagersByAuction,
     safetyDepositBoxesByVaultAndIndex,
@@ -141,6 +145,7 @@ export const useAuctions = (state?: AuctionViewState) => {
 
   useEffect(() => {
     const auctionViews: AuctionView[] = [];
+    const auctionByMetadata: Map<string, AuctionView> = new Map();
     auctions.map(auction => {
       const auctionView = processAccountsIntoAuctionView(
         publicKey?.toBase58(),
@@ -162,11 +167,22 @@ export const useAuctions = (state?: AuctionViewState) => {
         metadataByAuction,
         state,
       );
+
       if (auctionView) {
         auctionViews.push(auctionView);
+
+        if (
+          auctionView.thumbnail &&
+          auctionView.thumbnail.metadata &&
+          auctionView.thumbnail.metadata.pubkey
+        )
+          auctionByMetadata.set(
+            auctionView.thumbnail.metadata.pubkey,
+            auctionView,
+          );
       }
     });
-
+    setAuctionByMetadata(auctionByMetadata);
     setAuctionViews(auctionViews.sort(sortByEnded));
   }, [
     state,
@@ -188,9 +204,10 @@ export const useAuctions = (state?: AuctionViewState) => {
     cachedRedemptionKeys,
     metadataByAuction,
     setAuctionViews,
+    setAuctionByMetadata,
   ]);
 
-  return auctionViews;
+  return { auctionViews, auctionByMetadata };
 };
 
 function sortByEnded(a: AuctionView, b: AuctionView) {

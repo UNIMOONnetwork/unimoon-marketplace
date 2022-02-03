@@ -14,7 +14,7 @@ const orders = [
   { value: 'desc-name', label: 'Sort by Name DESC' },
 ];
 
-export const CollectionsView = () => {
+export const Collections = () => {
   const [filter, setFilter] = useState('');
   const [order, setOrder] = useState('asc-name');
   const [scrollPageNum, setScrollPageNum] = useState(1);
