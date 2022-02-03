@@ -1,0 +1,136 @@
+.create-collection-view {
+  padding-top: 50px;
+
+  @media screen and (max-width: 1073px) {
+    padding: 30px 0px;
+  }
+
+  .paneContainer {
+    .leftContainer,
+    .rightContainer {
+      @media screen and (max-width: 1193px) {
+        padding: 0 30px !important;
+      }
+
+      @media screen and (max-width: 400px) {
+        padding: 0 15px !important;
+      }
+    }
+
+    .leftContainer {
+      @media screen and (max-width: 959px) {
+        border-right: none !important;
+        margin-bottom: 30px;
+
+        .thumbnail-wrapper {
+          justify-content: center;
+
+          .thumbnail {
+            margin-right: 0px !important;
+          }
+        }
+
+        .collection-name {
+          text-align: center;
+          word-break: break-all;
+        }
+
+        .collection-description {
+          text-align: center;
+          word-break: break-all;
+        }
+      }
+
+      .thumbnail-wrapper {
+        display: flex;
+        align-items: center;
+        margin: 50px 0 20px;
+
+        .thumbnail {
+          // border-radius: 100%;
+          width: 319px;
+          height: 319px;
+          // min-width: 80px;
+          // min-height: 80px;
+          background-color: var(--cararra);
+          border: 1px solid var(--cararra);
+          background-position: center;
+          background-size: cover;
+          margin-right: 20px;
+        }
+      }
+
+      .preview-btns {
+        margin-top: 50px;
+
+        .createCollectionPreviewButton {
+          background: var(--black);
+          border: 1px solid var(--black);
+          color: var(--white);
+          font-family: var(--font-family-mulish);
+          font-style: normal;
+          font-size: 16px;
+          height: 45px;
+          letter-spacing: 0.05em;
+          line-height: 35px;
+          text-align: center;
+          border-radius: 0px;
+        }
+        .createCollectionPreviewButton:hover,
+        .createCollectionPreviewButton:focus {
+          color: var(--black);
+          background: transparent;
+        }
+      }
+      .collection-name,
+      .collection-description {
+        word-break: break-word;
+      }
+    }
+
+    .rightContainer {
+      .thumbnail-wrapper {
+        display: flex;
+        align-items: center;
+
+        .upload-file-btn-c {
+          flex-direction: unset;
+          justify-content: unset;
+          padding: 20px 0;
+        }
+      }
+
+      .detailsContainer {
+        margin-top: 30px;
+
+        .MuiTextField-root {
+          .MuiInputLabel-root {
+            font-size: 14px;
+          }
+        }
+      }
+
+      .advanced-setting {
+        box-shadow: none;
+
+        .MuiAccordionSummary-root {
+          padding: 0;
+          margin: 0;
+
+          .MuiAccordionSummary-expandIcon {
+            svg {
+              font-size: 38px;
+              color: var(--black);
+            }
+          }
+        }
+
+        .MuiCollapse-root {
+          .MuiAccordionDetails-root {
+            padding: 0;
+          }
+        }
+      }
+    }
+  }
+}

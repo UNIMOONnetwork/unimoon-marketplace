@@ -13,6 +13,9 @@ import {
   HomeView,
   StaticPageView,
   SearchPage,
+  CreateCollectionView,
+  CollectionView,
+  CollectionsView,
   ProfilePage,
   EditProfilePage,
   RankBoard,
@@ -92,6 +95,15 @@ export function Routes() {
             />
             <Route exact path="/rank-board" component={() => <RankBoard />} />
             <Route path="/" component={() => <HomeView />} />
+	            <Route exact path="/collections">
+                <CollectionsView />
+              </Route>
+              <Route exact path="/collections/:creator/:name">
+                <CollectionView />
+              </Route>
+	            <Route exact path="/create/collection">
+                <CreateCollectionView />
+              </Route>
           </Switch>
         </Providers>
       </HashRouter>

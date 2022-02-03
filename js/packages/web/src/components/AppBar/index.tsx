@@ -38,7 +38,16 @@ const getDefaultLinkActions = (connected: boolean) => {
 
 const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
   const { connected } = useWallet();
+  const [searchText, setSearchText] = useState('');
+  const history = useHistory();
+
+  const onSearch = () => history.push(`/search?q=` + searchText);
+
+  const onSearchChange = e => {
+    setSearchText(e.target.value);
+  };
   return (
+    <>
     <div
       style={{
         display: 'flex',
@@ -47,6 +56,14 @@ const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
     >
       {getDefaultLinkActions(connected)}
     </div>
+    <Input
+            className={"search-box"}
+            placeholder="Input search text"
+            value={searchText}
+            onChange={onSearchChange}
+            onPressEnter={onSearch}
+          />  
+    </>
   );
 };
 
@@ -125,14 +142,7 @@ export const LogoLink = () => {
 
 export const AppBar = () => {
   const { connected } = useWallet();
-  const [searchText, setSearchText] = useState('');
-  const history = useHistory();
 
-  const onSearch = () => history.push(`/search?q=` + searchText);
-
-  const onSearchChange = e => {
-    setSearchText(e.target.value);
-  };
 
   return (
     <>
@@ -142,18 +152,7 @@ export const AppBar = () => {
           <LogoLink />
           &nbsp;&nbsp;&nbsp;
           <MetaplexMenu />
-          <Input
-            placeholder="Input search text"
-            value={searchText}
-            onChange={onSearchChange}
-          />
-          <Button
-            type="dashed"
-            shape="circle"
-            icon={<SearchOutlined />}
-            size="large"
-            onClick={onSearch}
-          />
+           
         </div>
         <div className="app-right">
           {!connected && (

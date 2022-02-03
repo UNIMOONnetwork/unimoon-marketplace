@@ -45,3 +45,34 @@ export interface Presale {
   pricePerShare?: number;
   marketCap?: number;
 }
+
+export interface ICollection {
+  keys: Array<string>;
+  name: string;
+  symbol: string;
+  description: string;
+  cost: string;
+  ownerId: string;
+  short_url: string;
+  banner_url: string;
+  likes: string;
+  properties: Array<{ [key: string]: string }>;
+  _id: string;
+  expirationTime: string;
+  imageUrl: string;
+  collectionId: string;
+  createdAt: Date;
+}
+
+export interface ICollectionData {
+  name: string;
+  description: string;
+  image: string;
+  creator: StringPublicKey;
+  authorities: StringPublicKey[];
+  advanced: number;
+  max_size: number;
+  members: StringPublicKey[];
+  member_of: CollectionSignature[];
+  pubkey?: StringPublicKey;
+}

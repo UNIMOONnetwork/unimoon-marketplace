@@ -61,6 +61,7 @@ export const ENDPOINTS: Array<Endpoint> = [
     name: 'devnet',
     label: 'devnet',
     url: clusterApiUrl('devnet'),
+    // url: 'https://solana--devnet.datahub.figment.io/apikey/ca42019820383a0e77e2652e21c922bd/',
     chainId: ChainId.Devnet,
   },
 ];
@@ -225,7 +226,7 @@ export async function sendTransactionsWithManualRetry(
 ) {
   let stopPoint = 0;
   let tries = 0;
-  let lastInstructionsLength = null;
+  let lastInstructionsLength = 0;
   let toRemoveSigners: Record<number, boolean> = {};
   instructions = instructions.filter((instr, i) => {
     if (instr.length > 0) {
@@ -237,7 +238,7 @@ export async function sendTransactionsWithManualRetry(
   });
   let filteredSigners = signers.filter((_, i) => !toRemoveSigners[i]);
 
-  while (stopPoint < instructions.length && tries < 3) {
+  while (stopPoint < instructions.length && tries < 1) {
     instructions = instructions.slice(stopPoint, instructions.length);
     filteredSigners = filteredSigners.slice(stopPoint, filteredSigners.length);
 

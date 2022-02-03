@@ -72,10 +72,6 @@ export const ProfileDetailPage = ({ profile }) => {
                 <div className="info-header">ABOUT THE USER</div>
                 <div className="info-content">{profile.description}</div>
                 <br />
-                {/*
-                TODO: add info about artist
-              <div className="info-header">ABOUT THE CREATOR</div>
-              <div className="info-content">{art.about}</div> */}
               </Col>
             </Row>
           </Col>
