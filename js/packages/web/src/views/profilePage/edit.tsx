@@ -13,7 +13,6 @@ import { Redirect } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 // import { useProfileContext } from '../../contexts/profile';
-// import profileService from '../../services/profile';
 // import { useNotiStack } from '../../components/NotiStack';
 // import Input from '../../components/Input';
 // import { Preview } from '../../components/Preview';
@@ -27,8 +26,9 @@ export const EditProfilePage = () => {
   // const { profile } = useProfileContext();
   const profile = {};
 
-  const [profileAvatar, setProfileAvatar] =
-    useState<string | ArrayBuffer | null | undefined>();
+  const [profileAvatar, setProfileAvatar] = useState<
+    string | ArrayBuffer | null | undefined
+  >();
   const [rawAvatar, setRawAvatar] = useState<string>('');
   const [profileName, setProfileName] = useState<string>();
   const [profileUrl, setProfileUrl] = useState<string>();

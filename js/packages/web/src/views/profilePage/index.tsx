@@ -16,7 +16,7 @@ import {
   useUserArts,
 } from '../../hooks';
 
-import { Inventory } from './inventory';
+import { List } from './list';
 
 export const ProfilePage = () => {
   const { id } = useParams<{ id: string }>();
@@ -100,7 +100,7 @@ export const ProfilePage = () => {
     <>
       {profile && (
         <div className="profile-main-content">
-          <Inventory
+          <List
             owned={owned}
             profile={profile}
             auctions={auctions}

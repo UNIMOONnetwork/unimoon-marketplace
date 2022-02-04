@@ -17,11 +17,12 @@ const { TabPane } = Tabs;
 
 const { Content } = Layout;
 
-interface InventoryProps {
-  owned: any[];
+interface ListProps {
   profile?: Profile;
-  nfts: any[];
+  owned: any[];
+  created: any[];
   auctions: AuctionView[];
+  collections: any[];
 }
 
 export enum ProfileTabState {
@@ -29,14 +30,10 @@ export enum ProfileTabState {
   Owned = '1',
   Created = '2',
   Auctions = '3',
+  Collections = '4',
 }
 
-export const Inventory = ({
-  owned,
-  profile,
-  nfts,
-  auctions,
-}: InventoryProps) => {
+export const List = ({ profile, owned, created, auctions }: ListProps) => {
   const wallet = useWallet();
   const [activeKey, setActiveKey] = useState(ProfileTabState.Profile);
   const userId = wallet?.publicKey?.toString();
@@ -63,7 +60,7 @@ export const Inventory = ({
         gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
       }}
     >
-      {nfts.map((nItem, index) => (
+      {created.map((nItem, index) => (
         // <Card className="art-card" key={index}>
         <Link to={`/nft/${nItem.pubkey}`}>
           <ArtContent
@@ -72,7 +69,7 @@ export const Inventory = ({
             pubkey={nItem.pubkey}
             allowMeshRender={false}
           />
-          <div className="inventory-card">{nItem.info.data.name}</div>
+          <div className="list-card">{nItem.info.data.name}</div>
         </Link>
         //</Card>
       ))}
@@ -95,7 +92,7 @@ export const Inventory = ({
             pubkey={metadata.pubkey}
             allowMeshRender={false}
           />
-          <div className="inventory-card">{metadata.info.data.name}</div>
+          <div className="list-card">{metadata.info.data.name}</div>
         </Link>
         // </Card>
       ))}
