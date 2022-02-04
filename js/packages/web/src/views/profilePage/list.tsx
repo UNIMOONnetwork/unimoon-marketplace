@@ -9,7 +9,7 @@ import { ArtContent } from '../../components/ArtContent';
 import { AuctionRenderCard } from '../../components/AuctionRenderCard';
 import { PlaceholderAssetCard } from '../../components/PlaceholderAssetCard';
 // import { LoadingSpinner } from '../../components/LoadingSpinner';
-import { Profile } from '../../services/profile/profile.types';
+import { Profile } from '../../services/profile';
 import { CardLoader } from '../../components/MyLoader';
 import { ProfileDetailPage } from './details';
 
@@ -33,18 +33,18 @@ export enum ProfileTabState {
   Collections = '4',
 }
 
-export const List = ({ profile, owned, created, auctions }: ListProps) => {
+export const List = ({
+  profile,
+  owned,
+  created,
+  auctions,
+  collections,
+}: ListProps) => {
   const wallet = useWallet();
   const [activeKey, setActiveKey] = useState(ProfileTabState.Profile);
   const userId = wallet?.publicKey?.toString();
 
   const { isLoading } = useMeta();
-
-  const [value, setValue] = useState(0);
-
-  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: any) => {
-    setValue(newValue);
-  };
 
   const breakpointColumnsObj = {
     default: 4,
@@ -136,7 +136,7 @@ export const List = ({ profile, owned, created, auctions }: ListProps) => {
                 </TabPane>
               )}
 
-              {profile && profile.ownerId == userId && (
+              {profile && profile.wallet == userId && (
                 <TabPane
                   tab={<span className="tab-title">Owned</span>}
                   key={ProfileTabState.Owned}

@@ -1,15 +1,11 @@
 import React, { useContext, useEffect, useState, ReactNode } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-// import { useMutation } from 'react-query';
-// import profileService from '../services/profile';
-import {
-  ProfileOwnerRequest,
-  Profile,
-} from '../services/profile/profile.types';
+import profileService, { Profile } from '../services/profile';
 
 export type ProfileContextType = {
   profile: Profile | null;
   profileLoading: boolean | false;
+  setProfile: Function;
 };
 
 export type ProfileProviderProps = {
@@ -25,25 +21,25 @@ export const ProfileProvider = ({ children }: ProfileProviderProps) => {
 
   const userId = wallet?.publicKey?.toString();
 
-  // const profileOwnerMutation = useMutation(
-  //   (params: ProfileOwnerRequest) => profileService.getProfileOwner(params),
-  //   {
-  //     onSuccess: result => {
-  //       if (result?.length > 0) {
-  //         setProfile(result[0]);
-
-  //         setProfileLoading(false);
-  //       }
-  //     },
-  //   },
-  // );
-
   useEffect(() => {
     setProfileLoading(true);
 
-    if (userId) {
-      // profileOwnerMutation.mutate({ ownerId: userId });
-    }
+    // if (userId) {
+    //   (async () => {
+    //     try {
+    //       await profileService
+    //         .getProfileOwner({ ownerId: userId })
+    //         .then(res => {
+    //           if (res?.length > 0) {
+    //             setProfile(res[0]);
+    //             setProfileLoading(false);
+    //           }
+    //         });
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   })();
+    // }
   }, [userId]);
 
   return (
@@ -51,6 +47,7 @@ export const ProfileProvider = ({ children }: ProfileProviderProps) => {
       value={{
         profile,
         profileLoading,
+        setProfile,
       }}
     >
       {children}

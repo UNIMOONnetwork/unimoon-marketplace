@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
-// import { useMutation } from 'react-query';
 import BN from 'bn.js';
-import {
-  ProfileByIDRequest,
-  Profile,
-} from '../../services/profile/profile.types';
-// import profileService from '../../services/profile';
+import profileService, { Profile } from '../../services/profile';
 
 import {
-  AuctionView,
   AuctionViewState,
   useAuctions,
   useCreatorArts,
   useUserArts,
+  useCollections,
 } from '../../hooks';
 
 import { List } from './list';
@@ -22,46 +17,40 @@ export const ProfilePage = () => {
   const { id } = useParams<{ id: string }>();
   const [profile, setProfile] = useState<Profile>();
 
-  // const profileOwnerMutation = useMutation(
-  //   (params: ProfileByIDRequest) => profileService.getProfileByID(params),
-  //   {
-  //     onSuccess: result => {
-  //       if (result?.length > 0) {
-  //         setProfile(result[0]);
-  //       }
-  //     },
-  //   },
-  // );
-
   useEffect(() => {
-    // profileOwnerMutation.mutate({ profileId: id });
-    setProfile({
-      profileId: 'test',
-      ownerId: '3qp2RYC8kGGFHhi9owgBoeNA7ZGZrG1drdj1auJjgc7y',
-      name: 'Steven',
-      email: 'steven.wang.dev@gmail.com',
-      phone: '12345678',
-      bio: '',
-      imageUrl: '',
-      banner_url: '',
-      on_sale: [],
-      collectible: [],
-      created: [],
-      liked: [],
-      activity: [],
-      followers: 0,
-      following: 0,
-      description: 'I am a blockchain developer',
-      member_since: '',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    // if (id)
+    // (async () => {
+    //   try {
+    //     await profileService.getProfileByID(id).then(res => {
+    //       if (res?.length > 0) {
+    //         setProfile(res[0]);
+    //       }
+    //     });
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // })();
+    if (id)
+      setProfile({
+        id: 'test',
+        wallet: '3qp2RYC8kGGFHhi9owgBoeNA7ZGZrG1drdj1auJjgc7y',
+        username: 'Steven',
+        gender: 'male',
+        email: 'steven.wang.dev@gmail.com',
+        mobile: '12345678',
+        country_code: '00000',
+        profile_image: 'https://wallpapercave.com/mwp/wp2337008.jpg',
+        bio: 'I am a blockchain developer',
+        birthdate: '1990.05.05',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
   }, [id]);
 
   if (!id) {
     return <Redirect to="/" />;
   }
-  const created = useCreatorArts(profile?.ownerId);
+  const created = useCreatorArts(id);
   const owned = useUserArts();
 
   const { auctionViews: auctionsLive } = useAuctions(AuctionViewState.Live);
@@ -82,20 +71,16 @@ export const ProfilePage = () => {
         .toNumber(),
     );
 
-  let auctions: AuctionView[] = [];
-  if (profile) {
-    auctions = allAuctions.filter(
-      auction =>
-        auction.auctionManager.authority == profile.ownerId ||
-        (auction.state !== AuctionViewState.Defective &&
-          auction.auction.info.bidState.bids.some(
-            b => b.key == profile.ownerId,
-          )),
-    );
-  }
+  const auctions = allAuctions.filter(
+    auction =>
+      auction.auctionManager.authority == id ||
+      (auction.state !== AuctionViewState.Defective &&
+        auction.auction.info.bidState.bids.some(b => b.key == id)),
+  );
 
-  let myCollections: any[] = [];
-  let keys: string[] = [];
+  // const { collections } = useCollections(id);
+  const collections = [];
+
   return (
     <>
       {profile && (
@@ -104,7 +89,8 @@ export const ProfilePage = () => {
             owned={owned}
             profile={profile}
             auctions={auctions}
-            nfts={created}
+            created={created}
+            collections={collections}
           />
         </div>
       )}

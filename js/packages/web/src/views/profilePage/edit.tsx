@@ -12,10 +12,8 @@ import {
 import { Redirect } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-// import { useProfileContext } from '../../contexts/profile';
-// import { useNotiStack } from '../../components/NotiStack';
-// import Input from '../../components/Input';
-// import { Preview } from '../../components/Preview';
+import { useProfileContext } from '../../contexts/profile';
+import { Profile } from '../../services/profile';
 import { UserOutlined } from '@ant-design/icons';
 
 export const EditProfilePage = () => {
@@ -23,19 +21,17 @@ export const EditProfilePage = () => {
   const { connected } = useWallet();
   // const { displayMessage } = useNotiStack();
 
-  // const { profile } = useProfileContext();
-  const profile = {};
+  const { profile: defaultProfile, setProfile: setDefaultProfile } =
+    useProfileContext();
+
+  const [profile, setProfile] = useState<Profile | null>(defaultProfile);
 
   const [profileAvatar, setProfileAvatar] = useState<
     string | ArrayBuffer | null | undefined
-  >();
+  >(profile?.profile_image);
   const [rawAvatar, setRawAvatar] = useState<string>('');
-  const [profileName, setProfileName] = useState<string>();
-  const [profileUrl, setProfileUrl] = useState<string>();
-  const [profileBio, setProfileBio] = useState<string>();
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [previewOpen, setPreviewOpen] = useState<boolean>(false);
 
   const userId = wallet?.publicKey?.toString();
 
@@ -44,20 +40,13 @@ export const EditProfilePage = () => {
 
   const handleFileSelect = ({ target }) => {
     console.log(target.files);
-    if (target.files) {
+    if (target.files.length > 0) {
       const reader = new FileReader();
       reader.onload = () => setProfileAvatar(reader.result); //to preview avatar
       reader.readAsDataURL(target.files[0]);
 
       setRawAvatar(target.files[0]); //to upload avatar
     }
-  };
-
-  const displayErrorMessage = () => {
-    // displayMessage({
-    //   status: 'error',
-    //   message: 'There was an error updating your profile',
-    // });
   };
 
   const displayWalletMessage = () => {
@@ -67,34 +56,16 @@ export const EditProfilePage = () => {
     // });
   };
 
-  const handleSubmit = async () => {
+  const onSave = async () => {
     setLoading(true);
 
     let avatarUrl = '';
-    let bannerUrl = '';
 
     if (wallet?.publicKey) {
       if (profile) {
         if (rawAvatar != '') {
           // avatarUrl = await profileService.uploadImageToS3(rawAvatar);
         }
-
-        // const profileObject = {
-        //   name: profileName,
-        //   description: profileBio,
-        //   ownerId: wallet?.publicKey?.toString(),
-        //   profileId: profileUrl,
-        //   banner_url: bannerUrl == '' ? profile.banner_url : bannerUrl,
-        //   imageUrl: avatarUrl == '' ? profile.imageUrl : avatarUrl,
-        //   followers: profile.followers,
-        //   following: profile.following,
-        //   member_since: profile.member_since,
-        //   on_sale: profile.on_sale,
-        //   collectible: profile.collectible,
-        //   created: profile.created,
-        //   liked: profile.liked,
-        //   activity: profile.activity,
-        // };
 
         //   profileService
         //     .updateProfile(wallet?.publicKey?.toBase58(), profileObject)
@@ -111,6 +82,11 @@ export const EditProfilePage = () => {
         //     .finally(() => {
         //       setLoading(false);
         //     });
+
+        setDefaultProfile({
+          ...profile,
+          profile_image: avatarUrl,
+        });
       }
     } else {
       displayWalletMessage();
@@ -118,25 +94,24 @@ export const EditProfilePage = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (profile) {
-  //     setProfileAvatar(profile.imageUrl);
-  //     setProfileName(profile.name);
-  //     setProfileUrl(profile.profileId);
-  //     setProfileBio(profile.description);
-  //   }
-  // }, [profile]);
-
   if (!userId) {
     return <Redirect to={'/'} />;
   }
+
+  const onProfileChange = changed => {
+    console.log(changed);
+    setProfile({
+      ...profile,
+      ...changed,
+    });
+  };
 
   return (
     <>
       <div className="editProfilePage">
         <Content>
           <Col>
-            <Row>
+            <Row style={{ marginTop: '64px' }}>
               <Col
                 xs={{ span: 24 }}
                 md={{ span: 12 }}
@@ -153,18 +128,31 @@ export const EditProfilePage = () => {
                   <div className="thumbnail-content">
                     <label htmlFor="upload-button">
                       <Avatar
-                        style={{ height: 200, width: 200, cursor: 'pointer' }}
+                        style={{ height: 300, width: 300, cursor: 'pointer' }}
                         src={profileAvatar?.toString()}
                       ></Avatar>
                     </label>
                   </div>
                 </div>
+                <Divider />
+
+                <div className="info-header">ABOUT YOU</div>
+                <TextArea
+                  className="info-content"
+                  rows={7}
+                  onChange={e => onProfileChange({ bio: e.target.value })}
+                  defaultValue={profile?.bio}
+                ></TextArea>
               </Col>
               {/* <Divider /> */}
               <Col
                 xs={{ span: 24 }}
                 md={{ span: 12 }}
-                style={{ textAlign: 'left', fontSize: '1.4rem' }}
+                style={{
+                  textAlign: 'left',
+                  fontSize: '1.4rem',
+                  padding: '20px',
+                }}
               >
                 <Row>
                   <div style={{ fontWeight: 700, fontSize: '4rem' }}>
@@ -178,7 +166,8 @@ export const EditProfilePage = () => {
                       className="profile-input"
                       style={{ width: '100%' }}
                       placeholder="Name"
-                      options={[{ value: 'text 1' }, { value: 'text 2' }]}
+                      defaultValue={profile?.username}
+                      onChange={e => onProfileChange({ username: e })}
                     />
                   </Col>
                 </Row>
@@ -189,7 +178,8 @@ export const EditProfilePage = () => {
                       className="profile-input"
                       style={{ width: '100%' }}
                       placeholder="Email"
-                      options={[{ value: 'text 1' }, { value: 'text 2' }]}
+                      defaultValue={profile?.email}
+                      onChange={e => onProfileChange({ email: e })}
                     />
                   </Col>
                 </Row>
@@ -200,25 +190,30 @@ export const EditProfilePage = () => {
                       className="profile-input"
                       style={{ width: '100%' }}
                       placeholder="Phone"
-                      options={[{ value: 'text 1' }, { value: 'text 2' }]}
+                      defaultValue={profile?.mobile}
+                      onChange={e => onProfileChange({ mobile: e })}
                     />
                   </Col>
                 </Row>
-              </Col>
-              <Col span="12">
-                <Divider />
-
-                <div className="info-header">ABOUT YOU</div>
-                <TextArea className="info-content"></TextArea>
-                <br />
-                {/*
-                TODO: add info about artist
-              <div className="info-header">ABOUT THE CREATOR</div>
-              <div className="info-content">{art.about}</div> */}
-              </Col>
-              <Col span="6">
-                <Divider />
-                <Button className="action-btn save-btn">Save</Button>
+                <Row>
+                  <Col span={12}>
+                    <h6>Birthday</h6>
+                    <AutoComplete
+                      className="profile-input"
+                      style={{ width: '100%' }}
+                      placeholder="Birthday"
+                      defaultValue={profile?.birthdate}
+                      onChange={e => onProfileChange({ birthdate: e })}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <Button onClick={onSave} className="action-btn save-btn">
+                      Save
+                    </Button>
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Col>
