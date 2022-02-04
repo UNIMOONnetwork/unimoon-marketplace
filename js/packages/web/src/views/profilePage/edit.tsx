@@ -13,13 +13,11 @@ import { Redirect } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useProfileContext } from '../../contexts/profile';
-import { Profile } from '../../services/profile';
-import { UserOutlined } from '@ant-design/icons';
+import profileService, { Profile } from '../../services/profile';
 
 export const EditProfilePage = () => {
   const wallet = useWallet();
   const { connected } = useWallet();
-  // const { displayMessage } = useNotiStack();
 
   const { profile: defaultProfile, setProfile: setDefaultProfile } =
     useProfileContext();
@@ -67,21 +65,24 @@ export const EditProfilePage = () => {
           // avatarUrl = await profileService.uploadImageToS3(rawAvatar);
         }
 
-        //   profileService
-        //     .updateProfile(wallet?.publicKey?.toBase58(), profileObject)
-        //     .then((res: any) => {
-        //       // displayMessage(res);
-        //     })
-        //     .catch(err => {
-        //       if (err && err.message) {
-        //         // displayMessage(err);
-        //       } else {
-        //         // displayErrorMessage();
-        //       }
-        //     })
-        //     .finally(() => {
-        //       setLoading(false);
-        //     });
+        const profileObject = profile;
+        profileObject.profile_image = avatarUrl;
+
+          profileService
+            .updateProfile(wallet?.publicKey?.toBase58(), profileObject)
+            .then((res: any) => {
+              // displayMessage(res);
+            })
+            .catch(err => {
+              if (err && err.message) {
+                // displayMessage(err);
+              } else {
+                // displayErrorMessage();
+              }
+            })
+            .finally(() => {
+              setLoading(false);
+            });
 
         setDefaultProfile({
           ...profile,
@@ -180,6 +181,17 @@ export const EditProfilePage = () => {
                       placeholder="Email"
                       defaultValue={profile?.email}
                       onChange={e => onProfileChange({ email: e })}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <h6>Password</h6>
+                    <Input.Password 
+                      className="profile-input"
+                      placeholder="input password" 
+                      style={{ width: '100%' }}
+                      onChange={e => onProfileChange({ password: e })}
                     />
                   </Col>
                 </Row>

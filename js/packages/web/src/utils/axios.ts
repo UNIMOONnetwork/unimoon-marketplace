@@ -5,5 +5,9 @@ const instance = axios.create({
   timeout: 15000,
 });
 
+instance.interceptors.request.use(req => {
+  req.headers['api-key'] = 'Tv+4Cfd/d9raNuCVu2zLsg==';
+  return req;
+});
 instance.interceptors.response.use(response => response);
 export default instance;

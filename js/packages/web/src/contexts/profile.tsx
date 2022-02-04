@@ -24,22 +24,20 @@ export const ProfileProvider = ({ children }: ProfileProviderProps) => {
   useEffect(() => {
     setProfileLoading(true);
 
-    // if (userId) {
-    //   (async () => {
-    //     try {
-    //       await profileService
-    //         .getProfileOwner({ ownerId: userId })
-    //         .then(res => {
-    //           if (res?.length > 0) {
-    //             setProfile(res[0]);
-    //             setProfileLoading(false);
-    //           }
-    //         });
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   })();
-    // }
+    if (userId) {
+      (async () => {
+        try {
+          await profileService
+            .getProfileByID(userId)
+            .then(res => {
+              setProfile(res);
+              setProfileLoading(false);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    }
   }, [userId]);
 
   return (

@@ -18,33 +18,31 @@ export const ProfilePage = () => {
   const [profile, setProfile] = useState<Profile>();
 
   useEffect(() => {
-    // if (id)
-    // (async () => {
-    //   try {
-    //     await profileService.getProfileByID(id).then(res => {
-    //       if (res?.length > 0) {
-    //         setProfile(res[0]);
-    //       }
-    //     });
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // })();
     if (id)
-      setProfile({
-        id: 'test',
-        wallet: '3qp2RYC8kGGFHhi9owgBoeNA7ZGZrG1drdj1auJjgc7y',
-        username: 'Steven',
-        gender: 'male',
-        email: 'steven.wang.dev@gmail.com',
-        mobile: '12345678',
-        country_code: '00000',
-        profile_image: 'https://wallpapercave.com/mwp/wp2337008.jpg',
-        bio: 'I am a blockchain developer',
-        birthdate: '1990.05.05',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+    (async () => {
+      try {
+        await profileService.getProfileByID(id).then(res => {
+          setProfile(res);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+    // if (id)
+    //   setProfile({
+    //     id: 'test',
+    //     wallet: '3qp2RYC8kGGFHhi9owgBoeNA7ZGZrG1drdj1auJjgc7y',
+    //     username: 'Steven',
+    //     gender: 'male',
+    //     email: 'steven.wang.dev@gmail.com',
+    //     mobile: '12345678',
+    //     country_code: '00000',
+    //     profile_image: 'https://wallpapercave.com/mwp/wp2337008.jpg',
+    //     bio: 'I am a blockchain developer',
+    //     birthdate: '1990.05.05',
+    //     createdAt: new Date(),
+    //     updatedAt: new Date(),
+    //   });
   }, [id]);
 
   if (!id) {

@@ -6,6 +6,7 @@ export type Profile = {
   username: string;
   gender: string;
   email: string;
+  password: string;
   mobile: string;
   country_code: string;
   profile_image: string;
@@ -16,45 +17,17 @@ export type Profile = {
 };
 
 export class ProfileService {
-  getAllProfiles = async () => {
-    const { data } = await axios.get('/profiles');
+  getProfileByID = async (wallet): Promise<Profile> => {
+    const { data } = await axios.get(`/user/${wallet}`);
 
     return data;
-  };
-
-  getProfileOwner = async (ownerId): Promise<Profile[]> => {
-    const { data } = await axios.get(`/profiles/owner/${ownerId}`);
-
-    return data;
-  };
-
-  getProfileByID = async (profileId): Promise<Profile[]> => {
-    const { data } = await axios.get(`/profiles/${profileId}`);
-
-    return data;
-  };
-
-  createProfile = async (id: string, profile: any) => {
-    if (id) {
-      return new Promise((resolve, reject) =>
-        axios
-          .post(`/createprofile`, profile)
-          .then(({ data }) => {
-            resolve(data);
-          })
-          .catch(({ response: { data: err } }) => {
-            console.log(err);
-            reject(err);
-          }),
-      );
-    }
   };
 
   updateProfile = async (id: string, profile: any) => {
     if (id) {
       return new Promise((resolve, reject) =>
         axios
-          .put(`/updateprofile/${profile.profileId}`, profile)
+          .put(`/user/edit_profile`, profile)
           .then(({ data }) => {
             resolve(data);
           })
