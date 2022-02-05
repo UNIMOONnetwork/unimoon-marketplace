@@ -6,7 +6,7 @@ export type Profile = {
   username: string;
   gender: string;
   email: string;
-  password: string;
+  password?: string;
   mobile: string;
   country_code: string;
   profile_image: string;
@@ -37,21 +37,6 @@ export class ProfileService {
           }),
       );
     }
-  };
-
-  uploadImageToS3 = async (image: any) => {
-    const formData = new FormData();
-    formData.append('image', image);
-
-    const res = await axios.post(
-      `${process.env.NEXT_APP_BASE_URL}/images`,
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      },
-    );
-    if (res.data) return `${process.env.NEXT_APP_BASE_URL}/images/${res.data}`;
-    return '';
   };
 }
 

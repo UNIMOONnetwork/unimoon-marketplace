@@ -3,11 +3,10 @@ import { useHistory } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 // import * as Yup from 'yup';
 
-import { uploadImageToS3 } from '../../hooks/useCollections';
 import { useConnection } from '@oyster/common';
 import { mintCollection } from '../../actions/collection/createCollection';
-import { ICollectionData } from '../../types';
 import { useCollections } from '../../hooks';
+import UploadService from '../../services/upload';
 
 const MAX_SIZE_DEFAULT = 200;
 const MAX_SIZE_LIMIT = 200;
@@ -98,7 +97,7 @@ export const CreateCollection = () => {
       if (wallet.publicKey && collectionName) {
         setLoading(true);
         try {
-          const avatarUrl = await uploadImageToS3(rawAvatar);
+          const avatarUrl = await UploadService.uploadImage(rawAvatar);
           const collectionObject = {
             name: collectionName.padEnd(24),
             description: collectionDes.padEnd(250),

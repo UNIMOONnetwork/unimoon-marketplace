@@ -14,6 +14,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useProfileContext } from '../../contexts/profile';
 import profileService, { Profile } from '../../services/profile';
+import uploadService from '../../services/upload';
 
 export const EditProfilePage = () => {
   const wallet = useWallet();
@@ -62,27 +63,27 @@ export const EditProfilePage = () => {
     if (wallet?.publicKey) {
       if (profile) {
         if (rawAvatar != '') {
-          // avatarUrl = await profileService.uploadImageToS3(rawAvatar);
+          // avatarUrl = await uploadService.uploadImage(rawAvatar);
         }
 
         const profileObject = profile;
         profileObject.profile_image = avatarUrl;
 
-          profileService
-            .updateProfile(wallet?.publicKey?.toBase58(), profileObject)
-            .then((res: any) => {
-              // displayMessage(res);
-            })
-            .catch(err => {
-              if (err && err.message) {
-                // displayMessage(err);
-              } else {
-                // displayErrorMessage();
-              }
-            })
-            .finally(() => {
-              setLoading(false);
-            });
+        profileService
+          .updateProfile(wallet?.publicKey?.toBase58(), profileObject)
+          .then((res: any) => {
+            // displayMessage(res);
+          })
+          .catch(err => {
+            if (err && err.message) {
+              // displayMessage(err);
+            } else {
+              // displayErrorMessage();
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
 
         setDefaultProfile({
           ...profile,
@@ -187,9 +188,9 @@ export const EditProfilePage = () => {
                 <Row>
                   <Col span={12}>
                     <h6>Password</h6>
-                    <Input.Password 
+                    <Input.Password
                       className="profile-input"
-                      placeholder="input password" 
+                      placeholder="input password"
                       style={{ width: '100%' }}
                       onChange={e => onProfileChange({ password: e })}
                     />

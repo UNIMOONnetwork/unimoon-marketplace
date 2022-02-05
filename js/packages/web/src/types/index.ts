@@ -63,16 +63,3 @@ export interface ICollection {
   collectionId: string;
   createdAt: Date;
 }
-
-export interface ICollectionData {
-  name: string;
-  description: string;
-  image: string;
-  creator: StringPublicKey;
-  authorities: StringPublicKey[];
-  advanced: number;
-  max_size: number;
-  members: StringPublicKey[];
-  member_of: CollectionSignature[];
-  pubkey?: StringPublicKey;
-}
