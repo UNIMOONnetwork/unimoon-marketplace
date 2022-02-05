@@ -69,21 +69,21 @@ export const EditProfilePage = () => {
         const profileObject = profile;
         profileObject.profile_image = avatarUrl;
 
-        profileService
-          .updateProfile(wallet?.publicKey?.toBase58(), profileObject)
-          .then((res: any) => {
-            // displayMessage(res);
-          })
-          .catch(err => {
-            if (err && err.message) {
-              // displayMessage(err);
-            } else {
-              // displayErrorMessage();
-            }
-          })
-          .finally(() => {
-            setLoading(false);
-          });
+        // profileService
+        //   .updateProfile(wallet?.publicKey?.toBase58(), profileObject)
+        //   .then((res: any) => {
+        //     // displayMessage(res);
+        //   })
+        //   .catch(err => {
+        //     if (err && err.message) {
+        //       // displayMessage(err);
+        //     } else {
+        //       // displayErrorMessage();
+        //     }
+        //   })
+        //   .finally(() => {
+        //     setLoading(false);
+        //   });
 
         setDefaultProfile({
           ...profile,

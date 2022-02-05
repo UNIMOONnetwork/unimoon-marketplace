@@ -1,6 +1,6 @@
 export const data = {
   headContent: {
-    title: 'We are Metaplex',
+    title: 'We are Unimoon',
     subtitle: 'About Us',
     bannerImage: '/main-banner.png',
   },
@@ -8,7 +8,7 @@ export const data = {
   midContent: {
     sections: [
       {
-        title: 'Metaplex is a protocol built on top of Solana that allows:',
+        title: 'Unimoon is a protocol built on top of Solana that allows:',
         paragraphs: [
           '• Creating/Minting non-fungible tokens;',
           '• Starting a variety of auctions for primary/secondary sales;',
