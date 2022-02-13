@@ -1,110 +1,66 @@
 import React, { useState } from 'react';
+import {
+  Row,
+  Col,
+  Divider,
+  Layout,
+  InputNumber,
+  Avatar,
+  Input,
+  Button,
+} from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
-// import * as Yup from 'yup';
 
 import { useConnection } from '@oyster/common';
 import { mintCollection } from '../../actions/collection/createCollection';
 import { useCollections } from '../../hooks';
-import UploadService from '../../services/upload';
+// import UploadService from '../../services/upload';
+import { notify } from '../../utils/notifications';
 
-const MAX_SIZE_DEFAULT = 200;
-const MAX_SIZE_LIMIT = 200;
+const MAX_SIZE_LIMIT = 100;
 
 export const CreateCollection = () => {
   const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();
-  const { connected } = useWallet();
-  // const { displayMessage } = useNotiStack();
-  const displayMessage = data => {};
-  const { collections } = useCollections(wallet.publicKey?.toBase58());
 
   const [collectionName, setCollectionName] = useState<string>();
   const [collectionAvatar, setCollectionAvatar] = useState<
     string | ArrayBuffer | null | undefined
   >(); // to preview
   const [rawAvatar, setRawAvatar] = useState<string>(''); // to upload
-  const [collectionDes, setCollectionDesc] = useState<string>('');
+  const [collectionDescription, setCollectionDescription] =
+    useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [tooBig, setTooBig] = useState<boolean>(false);
-  const [maxSize, setMaxSize] = useState<number>(MAX_SIZE_DEFAULT);
-  const [removable, setRemovable] = useState<boolean>(true);
-  const [arrangeable, setArrangeable] = useState<boolean>(true);
-  const [expandable, setExpandable] = useState<boolean>(true);
+  const [maxSize, setMaxSize] = useState<number>(MAX_SIZE_LIMIT);
   const [isExist, setIsExist] = useState<boolean>(false);
 
-  // const schema = Yup.object().shape({
-  //   collectionAvatar: Yup.string().required('Collection Avatar is required!'),
-  //   collectionName: Yup.string()
-  //     .required('Collection Name is required!')
-  //     .max(25, 'Collection Name is too long, max length is 25'),
-  //   collectionDes: Yup.string()
-  //     .required('Colleciton Description is required')
-  //     .max(250, 'Description is too long, max lenght is 250'),
-  // });
+  const { Content } = Layout;
+  const { TextArea } = Input;
 
-  const handleFileSelect = file => {
-    const reader = new FileReader();
-    reader.onload = () => setCollectionAvatar(reader.result); //to preview avatar
-    reader.readAsDataURL(file);
-    setRawAvatar(file); //to upload avatar
-    setTooBig(false);
-  };
+  const handleFileSelect = ({ target }) => {
+    if (target.files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = () => setCollectionAvatar(reader.result); //to preview avatar
+      reader.readAsDataURL(target.files[0]);
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-
-    if (name === 'maxSize') {
-      let result =
-        value < 0 ? 0 : value > MAX_SIZE_LIMIT ? MAX_SIZE_LIMIT : value;
-      setMaxSize(result);
-    } else if (name === 'collectionName') {
-      setCollectionName(value);
-      let exist = false;
-      collections.forEach(item => {
-        let a = item.name.trim().toLowerCase();
-        let b = value.trim().toLowerCase();
-        if (a === b) exist = true;
-      });
-      setIsExist(exist);
+      setRawAvatar(target.files[0]); //to upload avatar
     }
   };
 
-  const displayErrorMessage = (updating?: boolean) => {
-    const creatingErrorMessage = 'There was an error creating your collection';
-    const updatingErrorMessage = 'Error uploading your collection display';
-    displayMessage({
-      message: updating ? updatingErrorMessage : creatingErrorMessage,
-      status: 'error',
-    });
-  };
-
-  const handleSubmit = async () => {
+  const onSave = async () => {
     if (wallet?.publicKey) {
-      // schema
-      //   .validate(
-      //     {
-      //       collectionAvatar,
-      //       collectionName,
-      //       collectionDes,
-      //       // collectionSymbol,
-      //     },
-      //     { abortEarly: true },
-      //   )
-      //   .then(async () => {
       if (wallet.publicKey && collectionName) {
         setLoading(true);
         try {
-          const avatarUrl = await UploadService.uploadImage(rawAvatar);
+          const avatarUrl = ''; //await UploadService.uploadImage(rawAvatar);
           const collectionObject = {
             name: collectionName.padEnd(24),
-            description: collectionDes.padEnd(250),
+            description: collectionDescription.padEnd(250),
             image: avatarUrl,
-            removable,
-            arrangeable,
-            expandable,
             maxSize: maxSize && maxSize > 0 ? maxSize : 0,
             members: [],
             memberOf: [],
@@ -117,9 +73,9 @@ export const CreateCollection = () => {
               wallet.publicKey.toBase58(),
             )
               .then(() => {
-                displayMessage({
+                notify({
+                  type: 'success',
                   message: 'Collection has been created successfully',
-                  status: 'success',
                 });
                 setLoading(false);
                 const baseCollectionsUrl = '/collections';
@@ -134,31 +90,128 @@ export const CreateCollection = () => {
               })
               .catch(err => {
                 console.error(err);
-                displayErrorMessage();
+                notify({
+                  type: 'error',
+                  message: 'Error occured in creating collection',
+                });
                 setLoading(false);
               });
           } catch (error) {
-            displayErrorMessage();
+            notify({
+              type: 'error',
+              message: 'Error occured in creating collection',
+            });
           }
         } catch (error) {
-          displayErrorMessage(true);
+          notify({
+            type: 'error',
+            message: 'Error occured in creating collection',
+          });
           return;
         }
       }
-      // })
-      // .catch(err => {
-      //   err.errors?.forEach(message => {
-      //     displayMessage({ message, status: 'error' });
-      //   });
-      // });
     } else {
-      displayMessage({
+      notify({
+        type: 'info',
         message: 'Please connect to wallet!',
-        status: 'info',
       });
       return;
     }
   };
 
-  return <></>;
+  return (
+    <>
+      <div className="create-collection">
+        <Content>
+          <Col>
+            <Row style={{ marginTop: '64px' }}>
+              <Col
+                xs={{ span: 24 }}
+                md={{ span: 12 }}
+                style={{ padding: '30px' }}
+              >
+                <div className="thumbnail-wrapper">
+                  <input
+                    accept=".jpeg,.jpg,.png,.gif"
+                    id="upload-button"
+                    type="file"
+                    onChange={handleFileSelect}
+                    style={{ display: 'none' }}
+                  />
+                  <div className="thumbnail-content">
+                    <label htmlFor="upload-button">
+                      <Avatar
+                        style={{ height: 300, width: 300, cursor: 'pointer' }}
+                        src={collectionAvatar?.toString()}
+                      ></Avatar>
+                    </label>
+                  </div>
+                </div>
+                <Divider />
+                <Row className="input-item">
+                  <h6>Description</h6>
+                  <TextArea
+                    className="info-content"
+                    rows={3}
+                    onChange={e => setCollectionDescription(e.target.value)}
+                    defaultValue={collectionDescription}
+                  ></TextArea>
+                </Row>
+              </Col>
+              {/* <Divider /> */}
+              <Col
+                xs={{ span: 24 }}
+                md={{ span: 12 }}
+                style={{
+                  textAlign: 'left',
+                  fontSize: '1.4rem',
+                  padding: '20px',
+                }}
+              >
+                <Row>
+                  <div style={{ fontWeight: 700, fontSize: '4rem' }}>
+                    Collection
+                  </div>
+                </Row>
+                <Row className="input-item">
+                  <Col span={12}>
+                    <h6 style={{ marginTop: 5 }}>Name</h6>
+                    <Input
+                      className="profile-input"
+                      style={{ width: '100%' }}
+                      placeholder="Name"
+                      defaultValue={collectionName}
+                      onChange={e => setCollectionName(e.target.value)}
+                    />
+                  </Col>
+                </Row>
+
+                <Row className="input-item">
+                  <Col span={12}>
+                    <h6 style={{ marginTop: 5 }}>Limit Size</h6>
+                    <InputNumber
+                      className="limit-input"
+                      style={{ width: '100%' }}
+                      placeholder="100"
+                      defaultValue={maxSize}
+                      min={1}
+                      max={MAX_SIZE_LIMIT}
+                      onChange={e => setMaxSize(e)}
+                    />
+                  </Col>
+                </Row>
+                <Row className="input-item">
+                  <Col span={12}>
+                    <Button onClick={onSave} className="action-btn save-btn">
+                      Save
+                    </Button>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Col>
+        </Content>
+      </div>
+    </>
+  );
 };

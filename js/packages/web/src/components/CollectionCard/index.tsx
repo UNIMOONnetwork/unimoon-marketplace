@@ -1,22 +1,30 @@
 import { Link } from 'react-router-dom';
+import { Card, Image, Button, Badge } from 'antd';
+import { ThreeDots } from '../MyLoader';
+
+const { Meta } = Card;
 
 export const CollectionCard = (props: any) => {
-  const { creator, image, name } = props;
+  const { creator, image, name, className, description, maxSize } = props;
 
   return (
     <Link to={`/collections/${creator}/${name}`}>
-      <div className="card-wrapper">
-        <div
-          className="item-card"
-          style={{ backgroundImage: `url(${image || image})` }}
-        />
-        <div
-          className="suisse-normal-black text-center"
-          style={{ fontSize: 20, marginBottom: 20 }}
-        >
-          {name}
+      <Card hoverable={true} className={`art-card ${className ?? ''}`}>
+        <div className="art-card__header">
+          <div className="edition-badge">{name}</div>
         </div>
-      </div>
+        <div className="art-content__wrapper">
+          <Image
+            fallback="image-placeholder.svg"
+            src={image}
+            preview={false}
+            wrapperClassName={className}
+            loading="lazy"
+            placeholder={<ThreeDots />}
+          />
+        </div>
+        <Meta title={`${description}`} />
+      </Card>
     </Link>
   );
 };

@@ -94,16 +94,22 @@ export function Routes() {
               component={() => <EditProfilePage />}
             />
             <Route exact path="/rank-board" component={() => <RankBoard />} />
+            <Route
+              exact
+              path="/collections"
+              component={() => <Collections />}
+            />
+            <Route
+              exact
+              path="/collections/:creator/:name"
+              component={() => <Collection />}
+            />
+            <Route
+              exact
+              path="/create/collection"
+              component={() => <CreateCollection />}
+            />
             <Route path="/" component={() => <HomeView />} />
-            <Route exact path="/collections">
-              <Collection />
-            </Route>
-            <Route exact path="/collections/:creator/:name">
-              <Collection />
-            </Route>
-            <Route exact path="/create/collection">
-              <CreateCollection />
-            </Route>
           </Switch>
         </Providers>
       </HashRouter>

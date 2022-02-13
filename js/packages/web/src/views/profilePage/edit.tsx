@@ -141,7 +141,8 @@ export const EditProfilePage = () => {
                 <div className="info-header">ABOUT YOU</div>
                 <TextArea
                   className="info-content"
-                  rows={7}
+                  rows={10}
+                  style={{ width: '100%' }}
                   onChange={e => onProfileChange({ bio: e.target.value })}
                   defaultValue={profile?.bio}
                 ></TextArea>
@@ -164,7 +165,7 @@ export const EditProfilePage = () => {
                 <Row>
                   <Col span={12}>
                     <h6 style={{ marginTop: 5 }}>Name</h6>
-                    <AutoComplete
+                    <Input
                       className="profile-input"
                       style={{ width: '100%' }}
                       placeholder="Name"
@@ -176,7 +177,7 @@ export const EditProfilePage = () => {
                 <Row>
                   <Col span={12}>
                     <h6>Email</h6>
-                    <AutoComplete
+                    <Input
                       className="profile-input"
                       style={{ width: '100%' }}
                       placeholder="Email"
@@ -199,7 +200,7 @@ export const EditProfilePage = () => {
                 <Row>
                   <Col span={12}>
                     <h6>Phone</h6>
-                    <AutoComplete
+                    <Input
                       className="profile-input"
                       style={{ width: '100%' }}
                       placeholder="Phone"
@@ -211,7 +212,7 @@ export const EditProfilePage = () => {
                 <Row>
                   <Col span={12}>
                     <h6>Birthday</h6>
-                    <AutoComplete
+                    <Input
                       className="profile-input"
                       style={{ width: '100%' }}
                       placeholder="Birthday"

@@ -16,6 +16,8 @@ export const useFetchCollections = (creator?: string, name?: string) => {
     connection
       .getProgramAccounts(toPublicKey(programIds().collection))
       .then(res => {
+        console.log('collections');
+        console.log(res);
         res.forEach(account => {
           try {
             const decoded = decodeCollectionData(account.account.data);
@@ -23,14 +25,12 @@ export const useFetchCollections = (creator?: string, name?: string) => {
             try {
               const { hostname, pathname } = new URL(decoded.image);
               // Legacy API Gateway
-              if (
-                hostname === 'ksvhvhrxpk.execute-api.us-east-1.amazonaws.com'
-              ) {
+              if (hostname === '') {
                 decoded.image = `${process.env.NEXT_APP_BASE_URL!}/${pathname}`;
               }
             } catch (err) {
               // Invalid URL fallback image
-              decoded.image = `${process.env.NEXT_APP_BASE_URL}/images/c81932f0e6ee783f5c7883a81d4b5b8c`;
+              decoded.image = `images/defaultCollection`;
             }
             col.push(decoded);
             if (decoded.creator === creator) {

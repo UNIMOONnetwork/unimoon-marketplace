@@ -28,11 +28,11 @@ export const Providers: FC = ({ children }) => {
                 <MetaProvider>
                   <LoaderProvider>
                     <ConfettiProvider>
-                      {/* <CollectionProvider> */}
-                      <ProfileProvider>
-                        <AppLayout>{children}</AppLayout>
-                      </ProfileProvider>
-                      {/* </CollectionProvider> */}
+                      <CollectionProvider>
+                        <ProfileProvider>
+                          <AppLayout>{children}</AppLayout>
+                        </ProfileProvider>
+                      </CollectionProvider>
                     </ConfettiProvider>
                   </LoaderProvider>
                 </MetaProvider>

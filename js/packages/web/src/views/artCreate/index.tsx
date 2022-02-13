@@ -14,6 +14,7 @@ import {
   Typography,
   Space,
   Card,
+  Select,
 } from 'antd';
 import { ArtCard } from './../../components/ArtCard';
 import { UserSearch, UserValue } from './../../components/UserSearch';
@@ -48,10 +49,12 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import { useTokenList } from '../../contexts/tokenList';
+import { useCollections } from '../../hooks';
 
 const { Step } = Steps;
 const { Dragger } = Upload;
 const { Text } = Typography;
+const { Option } = Select;
 
 export const ArtCreateView = () => {
   const connection = useConnection();
@@ -643,6 +646,8 @@ const InfoStep = (props: {
     props.attributes,
   );
   const [form] = Form.useForm();
+  const wallet = useWallet();
+  const { collections } = useCollections(wallet.publicKey?.toBase58());
 
   useEffect(() => {
     setRoyalties(
@@ -675,6 +680,24 @@ const InfoStep = (props: {
               className="art-create-card"
             />
           )}
+
+          <label className="action-field">
+            <span className="field-title">Description</span>
+            <Input.TextArea
+              className="input textarea"
+              placeholder="Max 500 characters"
+              maxLength={500}
+              value={props.attributes.description}
+              rows={4}
+              onChange={info =>
+                props.setAttributes({
+                  ...props.attributes,
+                  description: info.target.value,
+                })
+              }
+              allowClear
+            />
+          </label>
         </Col>
         <Col className="section" style={{ minWidth: 300 }}>
           <label className="action-field">
@@ -710,22 +733,21 @@ const InfoStep = (props: {
               }
             />
           </label>
-
           <label className="action-field">
-            <span className="field-title">Description</span>
-            <Input.TextArea
-              className="input textarea"
-              placeholder="Max 500 characters"
-              maxLength={500}
-              value={props.attributes.description}
-              onChange={info =>
-                props.setAttributes({
-                  ...props.attributes,
-                  description: info.target.value,
-                })
-              }
-              allowClear
-            />
+            <span className="field-title">Collections</span>
+            <Select
+              showSearch
+              style={{ width: '100%', color: 'white' }}
+              placeholder="Search to Select"
+              optionFilterProp="children"
+            >
+              <Option value="1">Not Identified</Option>
+              <Option value="2">Closed</Option>
+              <Option value="3">Communicated</Option>
+              <Option value="4">Identified</Option>
+              <Option value="5">Resolved</Option>
+              <Option value="6">Cancelled</Option>
+            </Select>
           </label>
           <label className="action-field">
             <span className="field-title">Maximum Supply</span>

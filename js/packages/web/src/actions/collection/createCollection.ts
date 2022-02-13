@@ -1,6 +1,7 @@
 import {
   findProgramAddress,
   programIds,
+  sendTransactionWithRetry,
   StringPublicKey,
   toPublicKey,
   WalletSigner,
@@ -54,9 +55,6 @@ export const mintCollection = async (
     name: string;
     description: string;
     image: string;
-    removable: boolean;
-    arrangeable: boolean;
-    expandable: boolean;
     maxSize: number;
     members: StringPublicKey[];
     memberOf: CollectionSignature[];
@@ -74,9 +72,6 @@ export const mintCollection = async (
     collection.name,
     collection.description,
     collection.image,
-    collection.removable,
-    collection.arrangeable,
-    collection.expandable,
     collection.maxSize,
     collection.members,
     collection.memberOf,
@@ -85,6 +80,8 @@ export const mintCollection = async (
     payerPublicKey,
   );
 
+  await sendTransactionWithRetry(connection, wallet, instructions, []);
+
   return { collectionAccount };
 };
 
@@ -92,9 +89,6 @@ async function createCollection(
   name: string,
   description: string,
   image: string,
-  removable: boolean,
-  expandable: boolean,
-  arrangeable: boolean,
   maxSize: number,
   members: StringPublicKey[],
   memberOf: CollectionSignature[],
@@ -116,16 +110,8 @@ async function createCollection(
     )
   )[0];
 
-  let advanced = 0;
-  if (removable) {
-    advanced += 1;
-  }
-  if (expandable) {
-    advanced += 2;
-  }
-  if (arrangeable) {
-    advanced += 4;
-  }
+  const advanced = 7;
+
   const value = new CreateCollectionArgs({
     name,
     description,
