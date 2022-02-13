@@ -18,9 +18,10 @@ import { useCollections } from '../../hooks';
 // import UploadService from '../../services/upload';
 import { notify } from '../../utils/notifications';
 
+const { TextArea } = Input;
 const MAX_SIZE_LIMIT = 100;
 
-export const CreateCollection = () => {
+export const CreateCollectionView = () => {
   const history = useHistory();
   const wallet = useWallet();
   const connection = useConnection();
@@ -28,26 +29,22 @@ export const CreateCollection = () => {
   const [collectionName, setCollectionName] = useState<string>();
   const [collectionAvatar, setCollectionAvatar] = useState<
     string | ArrayBuffer | null | undefined
-  >(); // to preview
-  const [rawAvatar, setRawAvatar] = useState<string>(''); // to upload
+  >();
+  const [avatar, setAvatar] = useState<string>('');
   const [collectionDescription, setCollectionDescription] =
     useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [previewOpen, setPreviewOpen] = useState<boolean>(false);
-  const [tooBig, setTooBig] = useState<boolean>(false);
   const [maxSize, setMaxSize] = useState<number>(MAX_SIZE_LIMIT);
-  const [isExist, setIsExist] = useState<boolean>(false);
 
   const { Content } = Layout;
-  const { TextArea } = Input;
 
   const handleFileSelect = ({ target }) => {
     if (target.files.length > 0) {
       const reader = new FileReader();
-      reader.onload = () => setCollectionAvatar(reader.result); //to preview avatar
+      reader.onload = () => setCollectionAvatar(reader.result);
       reader.readAsDataURL(target.files[0]);
 
-      setRawAvatar(target.files[0]); //to upload avatar
+      setAvatar(target.files[0]);
     }
   };
 
@@ -56,7 +53,7 @@ export const CreateCollection = () => {
       if (wallet.publicKey && collectionName) {
         setLoading(true);
         try {
-          const avatarUrl = ''; //await UploadService.uploadImage(rawAvatar);
+          const avatarUrl = ''; //await UploadService.uploadImage(avatar);
           const collectionObject = {
             name: collectionName.padEnd(24),
             description: collectionDescription.padEnd(250),
@@ -86,7 +83,6 @@ export const CreateCollection = () => {
                       }`
                     : baseCollectionsUrl;
                 history.push(redirectUrl);
-                history.go(0);
               })
               .catch(err => {
                 console.error(err);

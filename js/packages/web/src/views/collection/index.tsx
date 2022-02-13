@@ -21,7 +21,7 @@ export enum ExploreView {
   Module = 'module',
 }
 
-export const Collection = () => {
+export const CollectionView = () => {
   const { name, creator } = useParams<{ name: string; creator: string }>();
   const connection = useConnection();
   const { collections: collection } = useCollections(creator, name);

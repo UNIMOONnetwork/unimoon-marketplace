@@ -12,13 +12,13 @@ import {
   AuctionView,
   HomeView,
   StaticPageView,
-  SearchPage,
-  CreateCollection,
-  Collection,
-  Collections,
-  ProfilePage,
-  EditProfilePage,
-  RankBoard,
+  SearchPageView,
+  CreateCollectionView,
+  CollectionView,
+  CollectionsView,
+  ProfileView,
+  EditProfileView,
+  LeaderBoardView,
 } from './views';
 import { AdminView } from './views/admin';
 import PackView from './views/pack';
@@ -82,32 +82,36 @@ export function Routes() {
               component={() => <BillingView />}
             />
             <Route path="/about" component={() => <StaticPageView />} />
-            <Route exact path="/search" component={() => <SearchPage />} />
+            <Route exact path="/search" component={() => <SearchPageView />} />
             <Route
               exact
               path="/profile/:id"
-              component={() => <ProfilePage />}
+              component={() => <ProfileView />}
             />
             <Route
               exact
               path="/edit-profile"
-              component={() => <EditProfilePage />}
+              component={() => <EditProfileView />}
             />
-            <Route exact path="/rank-board" component={() => <RankBoard />} />
+            <Route
+              exact
+              path="/rank-board"
+              component={() => <LeaderBoardView />}
+            />
             <Route
               exact
               path="/collections"
-              component={() => <Collections />}
+              component={() => <CollectionsView />}
             />
             <Route
               exact
               path="/collections/:creator/:name"
-              component={() => <Collection />}
+              component={() => <CollectionView />}
             />
             <Route
               exact
               path="/create/collection"
-              component={() => <CreateCollection />}
+              component={() => <CreateCollectionView />}
             />
             <Route path="/" component={() => <HomeView />} />
           </Switch>

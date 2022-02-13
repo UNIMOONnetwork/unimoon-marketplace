@@ -13,7 +13,7 @@ import {
 
 import { List } from './list';
 
-export const ProfilePage = () => {
+export const ProfileView = () => {
   const { id } = useParams<{ id: string }>();
   const [profile, setProfile] = useState<Profile>();
 

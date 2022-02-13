@@ -7,12 +7,32 @@ import { CardLoader } from '../../components/MyLoader';
 
 const { Content } = Layout;
 
-export const Collections = () => {
+export const CollectionsContentView = ({ loading, collections }) => {
+  return (
+    <div className="artwork-grid">
+      {!loading ? (
+        collections && collections.length > 0 ? (
+          collections.map((item, index) => (
+            <CollectionCard {...item} key={index} />
+          ))
+        ) : (
+          <span>No filtered collections</span>
+        )
+      ) : (
+        Array(4)
+          .fill({})
+          .map((_, index) => <CardLoader key={index} />)
+      )}
+    </div>
+  );
+};
+
+export const CollectionsView = () => {
   const [scrollPageNum, setScrollPageNum] = useState(1);
   const [search, setSearch] = useState('');
-  const [searchCollections, searchAction] = useState<Array<ICollectionData>>(
-    [],
-  );
+  const [filteredCollections, setFilteredCollections] = useState<
+    Array<ICollectionData>
+  >([]);
 
   const handleScroll = async () => {
     if (
@@ -24,7 +44,7 @@ export const Collections = () => {
           .length >
         12 * scrollPageNum
       ) {
-        searchAction(
+        setFilteredCollections(
           collections
             .filter(item => item.name.toLowerCase().includes(search))
             .slice(0, 12 * (scrollPageNum + 1)),
@@ -46,7 +66,7 @@ export const Collections = () => {
 
   useEffect(() => {
     if (collections) {
-      searchAction(collections.slice(0, 12));
+      setFilteredCollections(collections.slice(0, 12));
     }
   }, [collections]);
 
@@ -59,21 +79,10 @@ export const Collections = () => {
         <Content style={{ display: 'flex', flexWrap: 'wrap' }}>
           <Col style={{ width: '100%', marginTop: 10 }}>
             <Row>
-              <div className="artwork-grid">
-                {!collectionLoading ? (
-                  searchCollections && searchCollections.length > 0 ? (
-                    searchCollections.map((item, index) => (
-                      <CollectionCard {...item} key={index} />
-                    ))
-                  ) : (
-                    <span>No filtered collections</span>
-                  )
-                ) : (
-                  Array(4)
-                    .fill({})
-                    .map((_, index) => <CardLoader key={index} />)
-                )}
-              </div>
+              <CollectionsContentView
+                loading={collectionLoading}
+                collections={filteredCollections}
+              />
             </Row>
           </Col>
         </Content>

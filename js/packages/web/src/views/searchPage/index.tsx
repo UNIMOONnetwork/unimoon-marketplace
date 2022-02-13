@@ -3,22 +3,19 @@ import { Link } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Col, Layout, Row, Tabs } from 'antd';
 import BN from 'bn.js';
-// import { useMutation } from 'react-query';
 
 import {
   AuctionView,
   AuctionViewState,
   useAuctions,
-  // useCollections,
-  // collectionQueryType,
+  useCollections,
 } from '../../hooks';
 import { useMeta } from '../../contexts';
 // import profileService, { Profile } from '../../services/profile';
 
-// import Header from '../../components/Header';
 import { AuctionRenderCard } from '../../components/AuctionRenderCard';
-import { PlaceholderAssetCard } from '../../components/PlaceholderAssetCard';
 import { CardLoader } from '../../components/MyLoader';
+import { CollectionsContentView } from '../collections';
 
 const { TabPane } = Tabs;
 const { Content } = Layout;
@@ -50,7 +47,7 @@ export const AuctionsView = (props: {
   );
 };
 
-export const SearchPage = () => {
+export const SearchPageView = () => {
   const url = window.location.href;
   const regex = new RegExp('[?&]q(=([^&#]*)|&|#|$)');
   const results = regex.exec(url);
@@ -86,11 +83,11 @@ export const SearchPage = () => {
         .toNumber(),
     );
 
-  // const { collections } = useCollections();
+  const { collections } = useCollections();
 
-  // const searchCollections = collections.filter(item =>
-  //   item.name.toLowerCase().includes(searchTerms.toLowerCase()),
-  // );
+  const searchCollections = collections.filter(item =>
+    item.name.toLowerCase().includes(searchTerms.toLowerCase()),
+  );
 
   return (
     <div className="search-page">
@@ -119,7 +116,12 @@ export const SearchPage = () => {
                 <TabPane
                   tab={<span className="tab-title">Collections</span>}
                   key={SearchPageState.Collections}
-                ></TabPane>
+                >
+                  <CollectionsContentView
+                    loading={false}
+                    collections={searchCollections}
+                  />
+                </TabPane>
                 {connected && (
                   <TabPane
                     tab={<span className="tab-title">Users</span>}

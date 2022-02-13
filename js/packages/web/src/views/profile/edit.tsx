@@ -16,7 +16,7 @@ import { useProfileContext } from '../../contexts/profile';
 import profileService, { Profile } from '../../services/profile';
 import uploadService from '../../services/upload';
 
-export const EditProfilePage = () => {
+export const EditProfileView = () => {
   const wallet = useWallet();
   const { connected } = useWallet();
 

@@ -24,8 +24,8 @@ const getDefaultLinkActions = (connected: boolean) => {
     <Link to={`/`} key={'explore'}>
       <Button className="app-btn">Explore</Button>
     </Link>,
-    <Link to={`/artworks`} key={'artwork'}>
-      <Button className="app-btn">{connected ? 'My Items' : 'Artwork'}</Button>
+    <Link to={`/collections`} key="collections">
+      <Button className="app-btn">Collections</Button>
     </Link>,
     <Link to={`/artists`} key={'artists'}>
       <Button className="app-btn">Creators</Button>
@@ -48,21 +48,21 @@ const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
   };
   return (
     <>
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: vertical ? 'column' : 'row',
-      }}
-    >
-      {getDefaultLinkActions(connected)}
-    </div>
-    <Input
-            className={"search-box"}
-            placeholder="Input search text"
-            value={searchText}
-            onChange={onSearchChange}
-            onPressEnter={onSearch}
-          />  
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: vertical ? 'column' : 'row',
+        }}
+      >
+        {getDefaultLinkActions(connected)}
+      </div>
+      <Input
+        className={'search-box'}
+        placeholder="Input search text"
+        value={searchText}
+        onChange={onSearchChange}
+        onPressEnter={onSearch}
+      />
     </>
   );
 };
@@ -143,7 +143,6 @@ export const LogoLink = () => {
 export const AppBar = () => {
   const { connected } = useWallet();
 
-
   return (
     <>
       <MobileNavbar />
@@ -152,7 +151,6 @@ export const AppBar = () => {
           <LogoLink />
           &nbsp;&nbsp;&nbsp;
           <MetaplexMenu />
-           
         </div>
         <div className="app-right">
           {!connected && (

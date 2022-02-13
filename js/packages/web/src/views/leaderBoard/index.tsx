@@ -34,7 +34,7 @@ const data = [
   },
 ];
 
-export const RankBoard = () => {
+export const LeaderBoardView = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const refSearchInput = useRef(null);
