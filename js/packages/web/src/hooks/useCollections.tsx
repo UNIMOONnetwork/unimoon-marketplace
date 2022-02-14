@@ -21,7 +21,7 @@ export const useCollections = (
     }
     if (collectionName) {
       result = result.filter(
-        col => col.name.toLowerCase() === collectionName.toLowerCase(),
+        col => col.name.trim().toLowerCase() === collectionName.toLowerCase(),
       );
     }
     return result || [];

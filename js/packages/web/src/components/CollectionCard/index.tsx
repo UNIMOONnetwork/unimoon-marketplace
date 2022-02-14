@@ -6,9 +6,8 @@ const { Meta } = Card;
 
 export const CollectionCard = (props: any) => {
   const { creator, image, name, className, description, maxSize } = props;
-
   return (
-    <Link to={`/collections/${creator}/${name}`}>
+    <Link to={`/collections/${creator}/${name.trim()}`}>
       <Card hoverable={true} className={`art-card ${className ?? ''}`}>
         <div className="art-card__header">
           <div className="edition-badge">{name}</div>

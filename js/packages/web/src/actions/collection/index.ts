@@ -16,8 +16,6 @@ export const useFetchCollections = (creator?: string, name?: string) => {
     connection
       .getProgramAccounts(toPublicKey(programIds().collection))
       .then(res => {
-        console.log('collections');
-        console.log(res);
         res.forEach(account => {
           try {
             const decoded = decodeCollectionData(account.account.data);

@@ -14,7 +14,6 @@ import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useConnection } from '@oyster/common';
 import { mintCollection } from '../../actions/collection/createCollection';
-import { useCollections } from '../../hooks';
 // import UploadService from '../../services/upload';
 import { notify } from '../../utils/notifications';
 
@@ -78,9 +77,7 @@ export const CreateCollectionView = () => {
                 const baseCollectionsUrl = '/collections';
                 const redirectUrl =
                   wallet && wallet.publicKey
-                    ? `${baseCollectionsUrl}/${wallet.publicKey.toBase58()}/${
-                        collectionObject.name
-                      }`
+                    ? `${baseCollectionsUrl}/${wallet.publicKey.toBase58()}/${collectionObject.name.trim()}`
                     : baseCollectionsUrl;
                 history.push(redirectUrl);
               })

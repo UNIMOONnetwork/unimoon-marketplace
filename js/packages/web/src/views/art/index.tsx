@@ -21,6 +21,7 @@ import { sendSignMetadata } from '../../actions/sendSignMetadata';
 import { ViewOn } from '../../components/ViewOn';
 import { ArtType } from '../../types';
 import { ArtMinting } from '../../components/ArtMinting';
+import { useCollections } from '../../hooks';
 
 const { Content } = Layout;
 
@@ -46,6 +47,7 @@ export const ArtView = () => {
     badge = `${art.edition} of ${art.supply}`;
   }
   const { ref, data } = useExtendedArt(id);
+  const { collections } = useCollections();
 
   // const { userAccounts } = useUserAccounts();
 
@@ -56,6 +58,9 @@ export const ArtView = () => {
 
   const description = data?.description;
   const attributes = data?.attributes;
+  const collection = collections.find(
+    collection => collection?.pubkey === data?.collection,
+  );
 
   const pubkey = wallet?.publicKey?.toBase58() || '';
 
@@ -186,6 +191,12 @@ export const ArtView = () => {
                 </Col>
               </Row>
             )}
+            <Row>
+              <Col>
+                <h6 style={{ marginTop: 5 }}>Collection</h6>
+                <div className="art-edition">{collection?.name}</div>
+              </Col>
+            </Row>
             {/* <Button
                   onClick={async () => {
                     if(!art.mint) {

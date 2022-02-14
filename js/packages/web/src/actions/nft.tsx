@@ -16,7 +16,7 @@ import {
   WalletSigner,
   Attribute,
   getAssetCostToStore,
-  ARWEAVE_UPLOAD_ENDPOINT
+  ARWEAVE_UPLOAD_ENDPOINT,
 } from '@oyster/common';
 import React, { Dispatch, SetStateAction } from 'react';
 import { MintLayout, Token } from '@solana/spl-token';
@@ -46,14 +46,11 @@ interface IArweaveResult {
 }
 
 const uploadToArweave = async (data: FormData): Promise<IArweaveResult> => {
-  const resp = await fetch(
-    ARWEAVE_UPLOAD_ENDPOINT,
-    {
-      method: 'POST',
-      // @ts-ignore
-      body: data,
-    },
-  );
+  const resp = await fetch(ARWEAVE_UPLOAD_ENDPOINT, {
+    method: 'POST',
+    // @ts-ignore
+    body: data,
+  });
 
   if (!resp.ok) {
     return Promise.reject(
@@ -88,11 +85,6 @@ export const mintNFT = async (
     properties: any;
     creators: Creator[] | null;
     sellerFeeBasisPoints: number;
-    collection?: {
-      name: string;
-      family: string;
-      collections: StringPublicKey;
-    };
   },
   collectionAddress: string | undefined,
   progressCallback: Dispatch<SetStateAction<number>>,
@@ -120,11 +112,7 @@ export const mintNFT = async (
         };
       }),
     },
-    collection: {
-      name: metadata.collection?.name,
-      family: metadata.collection?.family,
-      collections: metadata.collection?.collections,
-    },
+    collection: collectionAddress,
   };
 
   const realFiles: File[] = [

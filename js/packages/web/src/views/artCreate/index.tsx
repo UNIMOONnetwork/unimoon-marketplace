@@ -65,9 +65,6 @@ export const ArtCreateView = () => {
   const history = useHistory();
   const { width } = useWindowDimensions();
   const [nftCreateProgress, setNFTcreateProgress] = useState<number>(0);
-  const [collectionSelected, setCollectionSelected] = useState<
-    { name: string; family: string; collections: StringPublicKey } | undefined
-  >(undefined);
 
   const [step, setStep] = useState<number>(0);
   const [stepsVisible, setStepsVisible] = useState<boolean>(true);
@@ -90,6 +87,7 @@ export const ArtCreateView = () => {
       files: [],
       category: MetadataCategory.Image,
     },
+    collection: undefined,
   });
 
   const gotoStep = useCallback(
@@ -121,7 +119,6 @@ export const ArtCreateView = () => {
         files: attributes.properties.files,
         category: attributes.properties?.category,
       },
-      collection: collectionSelected,
     };
     setStepsVisible(false);
     setMinting(true);
@@ -133,7 +130,7 @@ export const ArtCreateView = () => {
         endpoint.name,
         files,
         metadata,
-        collectionSelected?.collections,
+        attributes.collection,
         setNFTcreateProgress,
         attributes.properties?.maxSupply,
       );
@@ -737,16 +734,22 @@ const InfoStep = (props: {
             <span className="field-title">Collections</span>
             <Select
               showSearch
-              style={{ width: '100%', color: 'white' }}
+              style={{ width: '100%', color: 'white', height: '100%' }}
               placeholder="Search to Select"
               optionFilterProp="children"
+              onSelect={index => {
+                props.setAttributes({
+                  ...props.attributes,
+                  collection: collections[index].pubkey,
+                });
+              }}
             >
-              <Option value="1">Not Identified</Option>
-              <Option value="2">Closed</Option>
-              <Option value="3">Communicated</Option>
-              <Option value="4">Identified</Option>
-              <Option value="5">Resolved</Option>
-              <Option value="6">Cancelled</Option>
+              {collections &&
+                collections.map((collection, index) => {
+                  return (
+                    <Option value={index}>{collection.name.trim()}</Option>
+                  );
+                })}
             </Select>
           </label>
           <label className="action-field">
