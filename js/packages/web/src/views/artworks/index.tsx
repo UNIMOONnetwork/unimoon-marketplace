@@ -64,7 +64,9 @@ export const ArtworksView = () => {
 
   const isDataLoading = isLoading || isFetching;
 
-  const artworkGrid = <ArtworksContentView userItems isDataLoading />;
+  const artworkGrid = (
+    <ArtworksContentView userItems={userItems} isDataLoading={isDataLoading} />
+  );
 
   const refreshButton = connected && storeIndexer.length !== 0 && (
     <Dropdown.Button
