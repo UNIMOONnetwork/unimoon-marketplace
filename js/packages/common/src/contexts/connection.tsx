@@ -238,7 +238,7 @@ export async function sendTransactionsWithManualRetry(
   });
   let filteredSigners = signers.filter((_, i) => !toRemoveSigners[i]);
 
-  while (stopPoint < instructions.length && tries < 1) {
+  while (stopPoint < instructions.length && tries < 3) {
     instructions = instructions.slice(stopPoint, instructions.length);
     filteredSigners = filteredSigners.slice(stopPoint, filteredSigners.length);
 
