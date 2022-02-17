@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Col, Row, Layout } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { useCollections } from '../../hooks';
 import { ArtCard } from '../../components/ArtCard';
+import { useMeta } from '../../contexts';
 
 const ART_CARD_SIZE = 250;
 const { Content } = Layout;
@@ -10,6 +11,20 @@ const { Content } = Layout;
 export const CollectionView = () => {
   const { name, creator } = useParams<{ name: string; creator: string }>();
   const { collections } = useCollections(creator, name);
+  const { metadata, pullMetadataByPubKeys } = useMeta();
+  useEffect(() => {
+    if (collections[0]) {
+      const missingPubKeys: string[] = [];
+      collections[0].members.map(pubkey => {
+        const art = metadata.find(a => a.pubkey === pubkey);
+        console.log(art);
+        if (!art) {
+          missingPubKeys.push(pubkey);
+        }
+      });
+      pullMetadataByPubKeys(missingPubKeys);
+    }
+  }, [collections]);
 
   return (
     <Layout style={{ margin: 0, marginTop: 30 }}>

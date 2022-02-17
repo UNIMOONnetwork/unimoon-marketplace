@@ -95,6 +95,16 @@ const UserActions = (props: { mobile?: boolean; onClick?: any }) => {
                 My Items
               </Button>
             </Link>
+            <Link to={'/create/collection'}>
+              <Button
+                onClick={() => {
+                  props.onClick ? props.onClick() : null;
+                }}
+                className="black-btn"
+              >
+                Create Collection
+              </Button>
+            </Link>
           </div>
         ) : (
           <>
@@ -134,6 +144,17 @@ const UserActions = (props: { mobile?: boolean; onClick?: any }) => {
               <Link to={`/artworks`} style={{ width: '100%' }}>
                 <Button className="metaplex-button-default" style={btnStyle}>
                   My Items
+                </Button>
+              </Link>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+              }}
+            >
+              <Link to={`/create/collection`} style={{ width: '100%' }}>
+                <Button className="metaplex-button-default" style={btnStyle}>
+                  Create Collection
                 </Button>
               </Link>
             </div>

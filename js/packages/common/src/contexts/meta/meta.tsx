@@ -26,6 +26,7 @@ import {
   pullStoreMetadata,
   pullPacks,
   pullPack,
+  pullMetadataByKeys,
 } from '.';
 import { StringPublicKey, TokenAccount, useUserAccounts } from '../..';
 
@@ -89,6 +90,25 @@ export function MetaProvider({ children = null as any }) {
     setState(nextState);
     await updateMints(nextState.metadataByMint);
     return [];
+  }
+
+  async function pullMetadataByPubKeys(metadataKeys: StringPublicKey[]) {
+    if (isLoading) return false;
+    if (!storeAddress) {
+      if (isReady) {
+        setIsLoading(false);
+      }
+      return;
+    } else if (!state.store) {
+      setIsLoading(true);
+    }
+    setIsLoading(true);
+
+    const nextState = await pullMetadataByKeys(connection, state, metadataKeys);
+
+    setIsLoading(false);
+    setState(nextState);
+    await updateMints(nextState.metadataByMint);
   }
 
   async function pullBillingPage(auctionAddress: StringPublicKey) {
@@ -336,14 +356,7 @@ export function MetaProvider({ children = null as any }) {
       update(undefined, undefined);
       updateRequestsInQueue.current = 0;
     }
-  }, [
-    connection,
-    setState,
-    updateMints,
-    storeAddress,
-    isReady,
-    page,
-  ]);
+  }, [connection, setState, updateMints, storeAddress, isReady, page]);
 
   // Fetch metadata on userAccounts change
   useEffect(() => {
@@ -372,6 +385,7 @@ export function MetaProvider({ children = null as any }) {
         update,
         pullAuctionPage,
         pullAllMetadata,
+        pullMetadataByPubKeys,
         pullBillingPage,
         // @ts-ignore
         pullAllSiteData,
