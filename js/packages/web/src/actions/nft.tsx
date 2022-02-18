@@ -16,7 +16,7 @@ import {
   WalletSigner,
   Attribute,
   getAssetCostToStore,
-  ARWEAVE_UPLOAD_ENDPOINT
+  ARWEAVE_UPLOAD_ENDPOINT,
 } from '@oyster/common';
 import React, { Dispatch, SetStateAction } from 'react';
 import { MintLayout, Token } from '@solana/spl-token';
@@ -30,6 +30,7 @@ import crypto from 'crypto';
 
 import { AR_SOL_HOLDER_ID } from '../utils/ids';
 import BN from 'bn.js';
+import { appendAddMembersInstruction } from './collection/addMembers';
 
 const RESERVED_TXN_MANIFEST = 'manifest.json';
 const RESERVED_METADATA = 'metadata.json';
@@ -45,14 +46,11 @@ interface IArweaveResult {
 }
 
 const uploadToArweave = async (data: FormData): Promise<IArweaveResult> => {
-  const resp = await fetch(
-    ARWEAVE_UPLOAD_ENDPOINT,
-    {
-      method: 'POST',
-      // @ts-ignore
-      body: data,
-    },
-  );
+  const resp = await fetch(ARWEAVE_UPLOAD_ENDPOINT, {
+    method: 'POST',
+    // @ts-ignore
+    body: data,
+  });
 
   if (!resp.ok) {
     return Promise.reject(
@@ -88,6 +86,7 @@ export const mintNFT = async (
     creators: Creator[] | null;
     sellerFeeBasisPoints: number;
   },
+  collectionAddress: string | undefined,
   progressCallback: Dispatch<SetStateAction<number>>,
   maxSupply?: number,
 ): Promise<{
@@ -113,6 +112,7 @@ export const mintNFT = async (
         };
       }),
     },
+    collection: collectionAddress,
   };
 
   const realFiles: File[] = [
@@ -199,6 +199,16 @@ export const mintNFT = async (
   //     lamports: 0.5 * LAMPORTS_PER_SOL // block.feeCalculator.lamportsPerSignature * 3 + mintRent, // TODO
   //   }),
   // );
+  // TODO: Add item to collection
+  if (collectionAddress) {
+    var collectionKey = toPublicKey(collectionAddress);
+    appendAddMembersInstruction(
+      wallet,
+      collectionKey,
+      instructions,
+      toPublicKey(metadataAccount),
+    );
+  }
 
   const { txid } = await sendTransactionWithRetry(
     connection,

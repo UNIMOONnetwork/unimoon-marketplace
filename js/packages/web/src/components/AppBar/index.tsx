@@ -24,8 +24,8 @@ const getDefaultLinkActions = (connected: boolean) => {
     <Link to={`/`} key={'explore'}>
       <Button className="app-btn">Explore</Button>
     </Link>,
-    <Link to={`/artworks`} key={'artwork'}>
-      <Button className="app-btn">{connected ? 'My Items' : 'Artwork'}</Button>
+    <Link to={`/collections`} key="collections">
+      <Button className="app-btn">Collections</Button>
     </Link>,
     <Link to={`/artists`} key={'artists'}>
       <Button className="app-btn">Creators</Button>
@@ -38,15 +38,32 @@ const getDefaultLinkActions = (connected: boolean) => {
 
 const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
   const { connected } = useWallet();
+  const [searchText, setSearchText] = useState('');
+  const history = useHistory();
+
+  const onSearch = () => history.push(`/search?q=` + searchText);
+
+  const onSearchChange = e => {
+    setSearchText(e.target.value);
+  };
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: vertical ? 'column' : 'row',
-      }}
-    >
-      {getDefaultLinkActions(connected)}
-    </div>
+    <>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: vertical ? 'column' : 'row',
+        }}
+      >
+        {getDefaultLinkActions(connected)}
+      </div>
+      <Input
+        className={'search-box'}
+        placeholder="Input search text"
+        value={searchText}
+        onChange={onSearchChange}
+        onPressEnter={onSearch}
+      />
+    </>
   );
 };
 
@@ -125,14 +142,6 @@ export const LogoLink = () => {
 
 export const AppBar = () => {
   const { connected } = useWallet();
-  const [searchText, setSearchText] = useState('');
-  const history = useHistory();
-
-  const onSearch = () => history.push(`/search?q=` + searchText);
-
-  const onSearchChange = e => {
-    setSearchText(e.target.value);
-  };
 
   return (
     <>
@@ -142,18 +151,6 @@ export const AppBar = () => {
           <LogoLink />
           &nbsp;&nbsp;&nbsp;
           <MetaplexMenu />
-          <Input
-            placeholder="Input search text"
-            value={searchText}
-            onChange={onSearchChange}
-          />
-          <Button
-            type="dashed"
-            shape="circle"
-            icon={<SearchOutlined />}
-            size="large"
-            onClick={onSearch}
-          />
         </div>
         <div className="app-right">
           {!connected && (

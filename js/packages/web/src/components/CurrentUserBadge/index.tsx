@@ -29,6 +29,13 @@ const btnStyle: React.CSSProperties = {
   height: 40,
 };
 
+const btnStyle2: React.CSSProperties = {
+  border: 'none',
+  height: 40,
+  width: '50%',
+  textAlign: 'start',
+};
+
 const UserActions = (props: { mobile?: boolean; onClick?: any }) => {
   const { wallet, publicKey } = useWallet();
   const { whitelistedCreatorsByCreator, store } = useMeta();
@@ -68,29 +75,90 @@ const UserActions = (props: { mobile?: boolean; onClick?: any }) => {
                 Sell
               </Button>
             </Link>
-          </div>
-        ) : (
-          <div
-            style={{
-              display: 'flex',
-            }}
-          >
-            {canCreate && (
-              <>
-                <Link to={`/art/create`} style={{ width: '100%' }}>
-                  <Button className="metaplex-button-default" style={btnStyle}>
-                    Create
-                  </Button>
-                </Link>
-                &nbsp;&nbsp;
-              </>
-            )}
-            <Link to={`/auction/create/0`} style={{ width: '100%' }}>
-              <Button className="metaplex-button-default" style={btnStyle}>
-                Sell
+            <Link to={'/edit-profile'}>
+              <Button
+                onClick={() => {
+                  props.onClick ? props.onClick() : null;
+                }}
+                className="black-btn"
+              >
+                Profile
+              </Button>
+            </Link>
+            <Link to={'/artworks'}>
+              <Button
+                onClick={() => {
+                  props.onClick ? props.onClick() : null;
+                }}
+                className="black-btn"
+              >
+                My Items
+              </Button>
+            </Link>
+            <Link to={'/create/collection'}>
+              <Button
+                onClick={() => {
+                  props.onClick ? props.onClick() : null;
+                }}
+                className="black-btn"
+              >
+                Create Collection
               </Button>
             </Link>
           </div>
+        ) : (
+          <>
+            <div
+              style={{
+                display: 'flex',
+              }}
+            >
+              {canCreate && (
+                <>
+                  <Link to={`/art/create`} style={{ width: '100%' }}>
+                    <Button
+                      className="metaplex-button-default"
+                      style={btnStyle}
+                    >
+                      Create
+                    </Button>
+                  </Link>
+                </>
+              )}
+              <Link to={`/auction/create/0`} style={{ width: '100%' }}>
+                <Button className="metaplex-button-default" style={btnStyle}>
+                  Sell
+                </Button>
+              </Link>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+              }}
+            >
+              <Link to={`/edit-profile`} style={{ width: '100%' }}>
+                <Button className="metaplex-button-default" style={btnStyle}>
+                  Profile
+                </Button>
+              </Link>
+              <Link to={`/artworks`} style={{ width: '100%' }}>
+                <Button className="metaplex-button-default" style={btnStyle}>
+                  My Items
+                </Button>
+              </Link>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+              }}
+            >
+              <Link to={`/create/collection`} style={{ width: '100%' }}>
+                <Button className="metaplex-button-default" style={btnStyle}>
+                  Create Collection
+                </Button>
+              </Link>
+            </div>
+          </>
         ))}
     </>
   );
@@ -297,7 +365,7 @@ export const CurrentUserBadge = (props: {
                   <Button
                     className="metaplex-button-default"
                     onClick={() => setShowAddFundsModal(true)}
-                    style={btnStyle}
+                    style={btnStyle2}
                   >
                     Add Funds
                   </Button>
@@ -305,7 +373,7 @@ export const CurrentUserBadge = (props: {
                   <Button
                     className="metaplex-button-default"
                     onClick={disconnect}
-                    style={btnStyle}
+                    style={btnStyle2}
                   >
                     Disconnect
                   </Button>
@@ -402,14 +470,6 @@ export const Cog = () => {
                 </Select.Option>
               ))}
             </Select>
-
-            <Button 
-              className="metaplex-button-default"
-              style={{border: 'none', height: 40, width: '100%', textAlign: 'left'}}
-            >
-              <Link to={"/edit-profile"}>Profile</Link>
-            </Button>
-
             <Button
               className="metaplex-button-default"
               style={btnStyle}
@@ -507,7 +567,6 @@ export const CurrentUserBadgeMobile = (props: {
         >
           Add Funds
         </Button>
-        &nbsp;&nbsp;
         <Button className="black-btn" onClick={disconnect}>
           Disconnect
         </Button>

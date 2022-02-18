@@ -34,7 +34,7 @@ const data = [
   },
 ];
 
-export const RankBoard = () => {
+export const LeaderBoardView = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const refSearchInput = useRef(null);
@@ -136,7 +136,7 @@ export const RankBoard = () => {
       key: 'rank',
       width: '10%',
       sorter: (a, b) => a.rank - b.rank,
-      sortDirections: ['descend', 'ascend'],
+      // sortDirections: ['descend', 'ascend'],
     },
     {
       title: 'Name',
@@ -157,7 +157,7 @@ export const RankBoard = () => {
       dataIndex: 'tx',
       key: 'tx',
       sorter: (a, b) => a.tx - b.tx,
-      sortDirections: ['descend', 'ascend'],
+      // sortDirections: ['descend', 'ascend'],
     },
   ];
 

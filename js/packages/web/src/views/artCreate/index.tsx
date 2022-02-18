@@ -14,6 +14,7 @@ import {
   Typography,
   Space,
   Card,
+  Select,
 } from 'antd';
 import { ArtCard } from './../../components/ArtCard';
 import { UserSearch, UserValue } from './../../components/UserSearch';
@@ -48,10 +49,12 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import { useTokenList } from '../../contexts/tokenList';
+import { useCollections } from '../../hooks';
 
 const { Step } = Steps;
 const { Dragger } = Upload;
 const { Text } = Typography;
+const { Option } = Select;
 
 export const ArtCreateView = () => {
   const connection = useConnection();
@@ -66,8 +69,9 @@ export const ArtCreateView = () => {
   const [step, setStep] = useState<number>(0);
   const [stepsVisible, setStepsVisible] = useState<boolean>(true);
   const [isMinting, setMinting] = useState<boolean>(false);
-  const [nft, setNft] =
-    useState<{ metadataAccount: StringPublicKey } | undefined>(undefined);
+  const [nft, setNft] = useState<
+    { metadataAccount: StringPublicKey } | undefined
+  >(undefined);
   const [files, setFiles] = useState<File[]>([]);
   const [attributes, setAttributes] = useState<IMetadataExtension>({
     name: '',
@@ -83,6 +87,7 @@ export const ArtCreateView = () => {
       files: [],
       category: MetadataCategory.Image,
     },
+    collection: undefined,
   });
 
   const gotoStep = useCallback(
@@ -125,6 +130,7 @@ export const ArtCreateView = () => {
         endpoint.name,
         files,
         metadata,
+        attributes.collection,
         setNFTcreateProgress,
         attributes.properties?.maxSupply,
       );
@@ -241,8 +247,12 @@ const CategoryStep = (props: {
       <Row className="call-to-action">
         <h2>Create a new item</h2>
         <p>
-          First time creating on Metaplex?{' '}
-          <a href="https://docs.metaplex.com/create-store/sell" target="_blank" rel="noreferrer">
+          First time creating on Unimoon?{' '}
+          <a
+            href="https://docs.unimoon.com/create-store/sell"
+            target="_blank"
+            rel="noreferrer"
+          >
             Read our creators’ guide.
           </a>
         </p>
@@ -553,8 +563,11 @@ const UploadStep = (props: {
                   : mainFile && mainFile.name,
             });
             const url = await fetch(customURL).then(res => res.blob());
-            const files = [coverFile, mainFile, customURL ? new File([url], customURL) : '']
-              .filter(f => f) as File[];
+            const files = [
+              coverFile,
+              mainFile,
+              customURL ? new File([url], customURL) : '',
+            ].filter(f => f) as File[];
 
             props.setFiles(files);
             props.confirm();
@@ -630,6 +643,8 @@ const InfoStep = (props: {
     props.attributes,
   );
   const [form] = Form.useForm();
+  const wallet = useWallet();
+  const { collections } = useCollections(wallet.publicKey?.toBase58());
 
   useEffect(() => {
     setRoyalties(
@@ -662,6 +677,24 @@ const InfoStep = (props: {
               className="art-create-card"
             />
           )}
+
+          <label className="action-field">
+            <span className="field-title">Description</span>
+            <Input.TextArea
+              className="input textarea"
+              placeholder="Max 500 characters"
+              maxLength={500}
+              value={props.attributes.description}
+              rows={4}
+              onChange={info =>
+                props.setAttributes({
+                  ...props.attributes,
+                  description: info.target.value,
+                })
+              }
+              allowClear
+            />
+          </label>
         </Col>
         <Col className="section" style={{ minWidth: 300 }}>
           <label className="action-field">
@@ -697,22 +730,27 @@ const InfoStep = (props: {
               }
             />
           </label>
-
           <label className="action-field">
-            <span className="field-title">Description</span>
-            <Input.TextArea
-              className="input textarea"
-              placeholder="Max 500 characters"
-              maxLength={500}
-              value={props.attributes.description}
-              onChange={info =>
+            <span className="field-title">Collections</span>
+            <Select
+              showSearch
+              style={{ width: '100%', color: 'white', height: '100%' }}
+              placeholder="Search to Select"
+              optionFilterProp="children"
+              onSelect={index => {
                 props.setAttributes({
                   ...props.attributes,
-                  description: info.target.value,
-                })
-              }
-              allowClear
-            />
+                  collection: collections[index].pubkey,
+                });
+              }}
+            >
+              {collections &&
+                collections.map((collection, index) => {
+                  return (
+                    <Option value={index}>{collection.name.trim()}</Option>
+                  );
+                })}
+            </Select>
           </label>
           <label className="action-field">
             <span className="field-title">Maximum Supply</span>
@@ -739,10 +777,7 @@ const InfoStep = (props: {
                 <>
                   {fields.map(({ key, name }) => (
                     <Space key={key} align="baseline">
-                      <Form.Item
-                        name={[name, 'trait_type']}
-                        hasFeedback
-                      >
+                      <Form.Item name={[name, 'trait_type']} hasFeedback>
                         <Input placeholder="trait_type (Optional)" />
                       </Form.Item>
                       <Form.Item
@@ -752,10 +787,7 @@ const InfoStep = (props: {
                       >
                         <Input placeholder="value" />
                       </Form.Item>
-                      <Form.Item
-                        name={[name, 'display_type']}
-                        hasFeedback
-                      >
+                      <Form.Item name={[name, 'display_type']} hasFeedback>
                         <Input placeholder="display_type (Optional)" />
                       </Form.Item>
                       <MinusCircleOutlined onClick={() => remove(name)} />
@@ -1278,13 +1310,13 @@ const Congrats = (props: {
 
   const newTweetURL = () => {
     const params = {
-      text: "I've created a new NFT artwork on Metaplex, check it out!",
+      text: "I've created a new NFT artwork on Unimoon, check it out!",
       url: `${
         window.location.origin
       }/#/art/${props.nft?.metadataAccount.toString()}`,
-      hashtags: 'NFT,Crypto,Metaplex',
-      // via: "Metaplex",
-      related: 'Metaplex,Solana',
+      hashtags: 'NFT,Crypto,Unimoon',
+      // via: "Unimoon",
+      related: 'Unimoon',
     };
     const queryParams = new URLSearchParams(params).toString();
     return `https://twitter.com/intent/tweet?${queryParams}`;

@@ -59,3 +59,36 @@
     }
   }
 }
+
+#desktop-navbar {
+  display: flex;
+  width: 100%;
+  
+  @media (max-width: @screen-sm-min) {
+    display: none;
+  }
+
+  .app-left {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    margin-left: 15px;
+    width: 100%;
+
+    .search-box {
+      width: 200px;
+    }
+    .search-box:hover, .search-box:focus{
+      width: 80% !important;
+    }
+  }
+
+  .app-right {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    margin-right: 15px;
+    right: 0;
+  }
+
+}

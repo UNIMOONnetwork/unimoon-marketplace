@@ -10,7 +10,7 @@ export const useAuctionsList = (
   activeKey: LiveAuctionViewState,
 ): { auctions: AuctionView[]; hasResaleAuctions: boolean } => {
   const { publicKey } = useWallet();
-  const auctions = useAuctions();
+  const { auctionViews: auctions } = useAuctions();
 
   const filteredAuctions = useMemo(() => {
     const filterFn = getFilterFunction(activeKey);

@@ -93,6 +93,7 @@ export interface IMetadataExtension {
       shares: number;
     }[];
   };
+  collection?: StringPublicKey;
 }
 
 export class MasterEditionV1 {

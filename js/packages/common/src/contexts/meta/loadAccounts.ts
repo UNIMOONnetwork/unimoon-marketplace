@@ -108,7 +108,7 @@ export const pullYourMetadata = async (
 
   console.log('--------->Pulling metadata for user.');
   let currBatch: string[] = [];
-  let batches = [];
+  const batches = [];
   const editions = [];
 
   for (let i = 0; i < userTokenAccounts.length; i++) {
@@ -169,21 +169,27 @@ export const pullYourMetadata = async (
     }
   }
 
-  console.log('------> Pulling master editions for user');
-  currBatch = [];
-  batches = [];
-  for (let i = 0; i < editions.length; i++) {
-    if (1 + currBatch.length > MULTIPLE_ACCOUNT_BATCH_SIZE) {
-      batches.push(currBatch);
-      currBatch = [];
-    } else if (tempCache.editions[editions[i]]) {
-      currBatch.push(tempCache.editions[editions[i]].info.parent);
-    }
-  }
+  console.log('------> Pulling master editions for user1');
+  // currBatch = [];
+  // batches = [];
+  // for (let i = 0; i < editions.length; i++) {
+  //   if (1 + currBatch.length > MULTIPLE_ACCOUNT_BATCH_SIZE) {
+  //     batches.push(currBatch);
+  //     currBatch = [];
+  //   } else if (tempCache.editions[editions[i]]) {
+  //     currBatch.push(tempCache.editions[editions[i]].info.parent);
+  //   }
+  // }
 
-  if (currBatch.length > 0 && currBatch.length <= MULTIPLE_ACCOUNT_BATCH_SIZE) {
-    batches.push(currBatch);
-  }
+  // if (currBatch.length > 0 && currBatch.length <= MULTIPLE_ACCOUNT_BATCH_SIZE) {
+  //   batches.push(currBatch);
+  // }
+  const loadEditions = () =>
+    pullEditions(connection, updateTemp, tempCache, tempCache.metadata);
+
+  console.log('-------->Loading all editions for store.');
+
+  await loadEditions();
 
   console.log(
     '------> From token accounts for user',

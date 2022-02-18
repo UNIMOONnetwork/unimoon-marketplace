@@ -14,6 +14,25 @@ import { isMetadata, isPack } from './utils';
 const { TabPane } = Tabs;
 const { Content } = Layout;
 
+export const ArtworksContentView = ({ userItems, isDataLoading }) => {
+  return (
+    <div className="artwork-grid">
+      {isDataLoading &&
+        [...Array(10)].map((_, idx) => <CardLoader key={idx} />)}
+      {!isDataLoading &&
+        userItems.map(item => {
+          const pubkey = isMetadata(item)
+            ? item.pubkey
+            : isPack(item)
+            ? item.provingProcessKey
+            : item.edition?.pubkey || item.metadata.pubkey;
+
+          return <ItemCard item={item} key={pubkey} />;
+        })}
+    </div>
+  );
+};
+
 export const ArtworksView = () => {
   const { connected } = useWallet();
   const {
@@ -46,19 +65,7 @@ export const ArtworksView = () => {
   const isDataLoading = isLoading || isFetching;
 
   const artworkGrid = (
-    <div className="artwork-grid">
-      {isDataLoading && [...Array(10)].map((_, idx) => <CardLoader key={idx} />)}
-      {!isDataLoading &&
-        userItems.map(item => {
-          const pubkey = isMetadata(item)
-            ? item.pubkey
-            : isPack(item)
-            ? item.provingProcessKey
-            : item.edition?.pubkey || item.metadata.pubkey;
-
-          return <ItemCard item={item} key={pubkey} />;
-        })}
-    </div>
+    <ArtworksContentView userItems={userItems} isDataLoading={isDataLoading} />
   );
 
   const refreshButton = connected && storeIndexer.length !== 0 && (
