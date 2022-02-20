@@ -1,20 +1,18 @@
-import axios from '../../utils/axios';
+import { initializeApp } from 'firebase/app';
+import { getStorage } from 'firebase/storage';
 
-export class UploadService {
-  uploadImage = async (image: any) => {
-    const formData = new FormData();
-    formData.append('image', image);
+const firebaseConfig = {
+  apiKey: 'AIzaSyCAaKqJAFwkqrGEcDFCe_M_u-iwZ21HLcE',
+  authDomain: 'unimoon-67e1d.firebaseapp.com',
+  projectId: 'unimoon-67e1d',
+  storageBucket: 'unimoon-67e1d.appspot.com',
+  messagingSenderId: '30338275002',
+  appId: '1:30338275002:web:bb35749dd80b26db36d483',
+};
 
-    const res = await axios.post(
-      `${process.env.NEXT_APP_BASE_URL}/images`,
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      },
-    );
-    if (res.data) return `${process.env.NEXT_APP_BASE_URL}/images/${res.data}`;
-    return '';
-  };
-}
+const firebaseApp = initializeApp(firebaseConfig);
 
-export default new UploadService();
+// Get a reference to the storage service, which is used to create references in your storage bucket
+const storage = getStorage(firebaseApp);
+
+export { storage };
