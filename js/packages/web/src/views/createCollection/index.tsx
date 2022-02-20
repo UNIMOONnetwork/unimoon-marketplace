@@ -127,6 +127,8 @@ export const CreateCollectionView = () => {
                           wallet && wallet.publicKey
                             ? `${baseCollectionsUrl}/${wallet.publicKey.toBase58()}/${collectionObject.name.trim()}`
                             : baseCollectionsUrl;
+                        history.push(redirectUrl);
+                        history.go(0);
                       })
                       .catch(err => {
                         console.error(err);
