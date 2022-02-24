@@ -332,6 +332,8 @@ export const CurrentUserBadge = (props: {
                 <div
                   style={{
                     marginBottom: 10,
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
                   <TokenCircle

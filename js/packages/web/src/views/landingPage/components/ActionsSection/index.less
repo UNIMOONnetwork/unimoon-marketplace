@@ -1,0 +1,37 @@
+#actions-section {
+  .section-title {
+    text-align: center;
+  }
+
+  .action-group {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 65px;
+
+    @media (max-width: 1412px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (max-width: 1000px) {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .action-card {
+      margin-top: 15px;
+      text-align: center;
+      min-width: 340px;
+      border-style: solid;
+      border-width: 5px;
+      border-image: conic-gradient(
+          #6bdabb,
+          #89cbe9,
+          #c7479c,
+          #6bdabb,
+          #5085e3,
+          #c7479c,
+          #6bdabb
+        )
+        1;
+    }
+  }
+}
