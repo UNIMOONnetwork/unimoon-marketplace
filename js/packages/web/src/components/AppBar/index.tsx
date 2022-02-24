@@ -21,7 +21,7 @@ const { Search } = Input;
 
 const getDefaultLinkActions = (connected: boolean) => {
   return [
-    <Link to={`/`} key={'explore'}>
+    <Link to={`/home`} key={'explore'}>
       <Button className="app-btn">Explore</Button>
     </Link>,
     <Link to={`/collections`} key="collections">
@@ -40,12 +40,26 @@ const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
   const { connected } = useWallet();
   const [searchText, setSearchText] = useState('');
   const history = useHistory();
+  const { width } = useWindowDimensions();
 
   const onSearch = () => history.push(`/search?q=` + searchText);
 
   const onSearchChange = e => {
     setSearchText(e.target.value);
   };
+
+  const searchInput =
+    width < 1180 ? (
+      ''
+    ) : (
+      <Input
+        className={'search-box'}
+        placeholder="Input search text"
+        value={searchText}
+        onChange={onSearchChange}
+        onPressEnter={onSearch}
+      />
+    );
   return (
     <>
       <div
@@ -56,13 +70,7 @@ const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
       >
         {getDefaultLinkActions(connected)}
       </div>
-      <Input
-        className={'search-box'}
-        placeholder="Input search text"
-        value={searchText}
-        onChange={onSearchChange}
-        onPressEnter={onSearch}
-      />
+      {searchInput}
     </>
   );
 };
@@ -72,7 +80,7 @@ export const MetaplexMenu = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const { connected } = useWallet();
 
-  if (width < 768)
+  if (width < 950)
     return (
       <>
         <Modal
@@ -99,10 +107,6 @@ export const MetaplexMenu = () => {
                   <ConnectButton
                     onClick={() => setIsModalVisible(false)}
                     className="secondary-btn"
-                  />
-                  <HowToBuyModal
-                    onClick={() => setIsModalVisible(false)}
-                    buttonClassName="black-btn"
                   />
                 </div>
               ) : (
@@ -153,9 +157,6 @@ export const AppBar = () => {
           <MetaplexMenu />
         </div>
         <div className="app-right">
-          {!connected && (
-            <HowToBuyModal buttonClassName="modal-button-default" />
-          )}
           {!connected && (
             <ConnectButton style={{ height: 48 }} allowWalletChange />
           )}

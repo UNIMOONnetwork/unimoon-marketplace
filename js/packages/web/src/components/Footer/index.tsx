@@ -1,128 +1,59 @@
 import React from 'react';
 import { SendOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
-import { footerConf } from './footerData';
-import { LABELS } from '../../constants';
+import { Link } from 'react-router-dom';
+import { Typography, Layout, Row, Col, Button } from 'antd';
+
+const { Text, Title } = Typography;
+
+const { Content } = Layout;
 
 export const Footer = () => {
-  const validateMessages = {
-    types: {
-      email: 'Input is not a valid email!',
-    },
-  };
-
-  const CustomForm = (props: {
-    status: any;
-    message: any;
-    onValidated: any;
-  }) => {
-    let email: any;
-    const submit = (values: any) => {
-      email = values.user.email;
-      email &&
-        email.indexOf('@') > -1 &&
-        props.onValidated({
-          EMAIL: email,
-          // NAME: name.value
-        });
-    };
-    return (
-      <>
-        <Form
-          className={'footer-sign-up'}
-          onFinish={submit}
-          validateMessages={validateMessages}
-        >
-          <Form.Item
-            name={['user', 'email']}
-            rules={[
-              {
-                type: 'email',
-              },
-            ]}
-            style={{ display: 'flex !important' }}
-          >
-            <Input
-              className={'footer-input'}
-              type="text"
-              id="input"
-              placeholder="Email Address"
-              bordered={false}
-            />
-            <Button className={'footer-button'} htmlType="submit">
-              <SendOutlined />
-            </Button>
-          </Form.Item>
-        </Form>
-        {props.status ? (
-          <div
-            style={{
-              background: 'rgb(217,217,217)',
-              borderRadius: 2,
-              padding: 10,
-              display: 'inline-block',
-            }}
-          >
-            {props.status === 'sending' && (
-              <div style={{ color: 'blue' }}>Loading...</div>
-            )}
-            {props.status === 'error' && (
-              <div
-                style={{ color: 'red' }}
-                dangerouslySetInnerHTML={{ __html: props.message }}
-              />
-            )}
-            {props.status === 'success' && (
-              <div
-                style={{ color: 'green' }}
-                dangerouslySetInnerHTML={{ __html: props.message }}
-              />
-            )}
-          </div>
-        ) : null}
-      </>
-    );
-  };
-
-  const NewsLetterForm = () => (
-    <CustomForm status={status} message={''} onValidated={() => {}} />
-  );
-
   return (
     <div className="footer-container">
-      <div className="footer-info">
-        {footerConf.showShopName ? (
-          <div className="footer-community">
-            <div className="sub-header">
-              {LABELS.STORE_NAME} NFT Marketplace
-            </div>
-            <div className="footer-link">Powered by Unimoon</div>
-          </div>
-        ) : null}
-        {footerConf.components.map(component => (
-          <div className="footer-section-container">
-            <div className="sub-header">{component.title}</div>
-            {component.links.map(link => (
-              <div className="body-text">
-                <a href={link.url} target="_blank" className="footer-link">
-                  {link.label}
-                </a>
+      <Layout>
+        <Content
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            backgroundColor: 'rgb(18, 18, 18)',
+          }}
+        >
+          <Col span={8}>
+            <Row>
+              <img src="/unimoon-logo.png" />
+              <div className="logo-description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Scelerisque urna, faucibus nunc nibh quisque quis cursus iaculis
+                diam. Est a, quis lorem a sit pharetra. Eu senectus tincidunt
+                lorem faucibus ac sed dignissim.
               </div>
-            ))}
-          </div>
-        ))}
-        {footerConf.showEmailSubscriber ? (
-          <div className="footer-section-container subscriber-container">
-            <div className="subscriber-text">
-              {footerConf.emailSubscriberText}
-            </div>
-            <NewsLetterForm />
-          </div>
-        ) : null}
-      </div>
+            </Row>
+          </Col>
+          <Col span={8} style={{ display: 'flex', justifyContent: 'end' }}>
+            <Row>
+              <Title level={4}>Quick Links</Title>
+              <Link to={`/home`}>Explore</Link>
+              <Link to={`/art/create`}>Create</Link>
+              <Link to={`/`}>Market</Link>
+            </Row>
+          </Col>
+          <Col span={8} style={{ display: 'flex', justifyContent: 'end' }}>
+            <Row style={{ display: 'inline-grid' }}>
+              <Title level={4}>Contact</Title>
+              <Link to={`/#`}>+1 210 891 4661</Link>
+              <Link to={`/#`}>admin@unimoon.com</Link>
+              <div>
+                <img src="/fb.png" />
+                <img src="/tw.png" style={{ marginLeft: '20px' }} />
+                <img src="/ig.png" style={{ marginLeft: '20px' }} />
+              </div>
+            </Row>
+          </Col>
+        </Content>
+      </Layout>
       <div className="footer-foot">
         <div className="small-body footer-link">
-          2021 {LABELS.STORE_NAME} LLC, All rights reserved
+          UNIMOON © 2022. All rights reserved
         </div>
       </div>
     </div>

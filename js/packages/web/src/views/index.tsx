@@ -15,3 +15,4 @@ export { LeaderBoardView } from './leaderBoard';
 export { CreateCollectionView } from './createCollection';
 export { CollectionView } from './collection';
 export { CollectionsView } from './collections';
+export { LandingView } from './landingPage';

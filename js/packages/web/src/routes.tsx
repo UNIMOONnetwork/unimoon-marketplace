@@ -19,6 +19,7 @@ import {
   ProfileView,
   EditProfileView,
   LeaderBoardView,
+  LandingView,
 } from './views';
 import { AdminView } from './views/admin';
 import PackView from './views/pack';
@@ -113,7 +114,8 @@ export function Routes() {
               path="/create/collection"
               component={() => <CreateCollectionView />}
             />
-            <Route path="/" component={() => <HomeView />} />
+            <Route exact path="/home" component={() => <HomeView />} />
+            <Route path="/" component={() => <LandingView />} />
           </Switch>
         </Providers>
       </HashRouter>

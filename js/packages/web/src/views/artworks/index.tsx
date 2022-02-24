@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Layout, Row, Col, Tabs, Dropdown, Menu } from 'antd';
 import { useMeta } from '../../contexts';
 import { CardLoader } from '../../components/MyLoader';
+import { CollectionsContentView } from '../collections';
 
 import { ArtworkViewState } from './types';
 import { useItems } from './hooks/useItems';
+import { useCollections } from '../../hooks';
 import ItemCard from './components/ItemCard';
 import { useUserAccounts } from '@oyster/common';
 import { DownOutlined } from '@ant-design/icons';
@@ -34,7 +36,9 @@ export const ArtworksContentView = ({ userItems, isDataLoading }) => {
 };
 
 export const ArtworksView = () => {
+  const wallet = useWallet();
   const { connected } = useWallet();
+
   const {
     isLoading,
     pullAllMetadata,
@@ -47,6 +51,9 @@ export const ArtworksView = () => {
   const [activeKey, setActiveKey] = useState(ArtworkViewState.Metaplex);
 
   const userItems = useItems({ activeKey });
+  const { collectionLoading, collections } = useCollections(
+    wallet.publicKey?.toString(),
+  );
 
   useEffect(() => {
     if (!isFetching) {
@@ -91,34 +98,37 @@ export const ArtworksView = () => {
       <Content style={{ display: 'flex', flexWrap: 'wrap' }}>
         <Col style={{ width: '100%', marginTop: 10 }}>
           <Row>
-            <Tabs
-              activeKey={activeKey}
-              onTabClick={key => setActiveKey(key as ArtworkViewState)}
-              tabBarExtraContent={refreshButton}
-            >
-              <TabPane
-                tab={<span className="tab-title">All</span>}
-                key={ArtworkViewState.Metaplex}
+            {connected && (
+              <Tabs
+                activeKey={activeKey}
+                onTabClick={key => setActiveKey(key as ArtworkViewState)}
+                tabBarExtraContent={refreshButton}
               >
-                {artworkGrid}
-              </TabPane>
-              {connected && (
+                <TabPane
+                  tab={<span className="tab-title">Collections</span>}
+                  key={ArtworkViewState.Metaplex}
+                >
+                  <CollectionsContentView
+                    loading={collectionLoading}
+                    collections={collections}
+                  />
+                </TabPane>
+
                 <TabPane
                   tab={<span className="tab-title">Owned</span>}
                   key={ArtworkViewState.Owned}
                 >
                   {artworkGrid}
                 </TabPane>
-              )}
-              {connected && (
+
                 <TabPane
                   tab={<span className="tab-title">Created</span>}
                   key={ArtworkViewState.Created}
                 >
                   {artworkGrid}
                 </TabPane>
-              )}
-            </Tabs>
+              </Tabs>
+            )}
           </Row>
         </Col>
       </Content>

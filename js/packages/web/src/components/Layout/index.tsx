@@ -1,12 +1,14 @@
 import React from 'react';
 import { Layout } from 'antd';
-
+import { useLocation } from 'react-router-dom';
 import { AppBar } from '../AppBar';
 import { Footer } from '../Footer';
 
 const { Header, Content } = Layout;
 
 export const AppLayout = React.memo((props: any) => {
+  const location = useLocation();
+
   return (
     <>
       <Layout id={'main-layout'}>
@@ -29,14 +31,13 @@ export const AppLayout = React.memo((props: any) => {
           <Content
             className="App-Content"
             style={{
-              overflow: 'scroll',
-              padding: '30px 48px ',
+              padding: '30px 7.8125%',
             }}
           >
             {props.children}
           </Content>
         </Layout>
-        {/*<Footer />*/}
+        {location.pathname == '/' ? <Footer /> : ''}
       </Layout>
     </>
   );
