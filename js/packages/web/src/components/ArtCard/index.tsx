@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardProps, Button, Badge } from 'antd';
+import { Card, CardProps, Button, Badge, Typography } from 'antd';
 import { MetadataCategory, StringPublicKey } from '@oyster/common';
 import { ArtContent } from '../ArtContent';
 import { useArt } from '../../hooks';
@@ -7,6 +7,7 @@ import { Artist, ArtType } from '../../types';
 import { MetaAvatar } from '../MetaAvatar';
 
 const { Meta } = Card;
+const { Text, Title } = Typography;
 
 export interface ArtCardProps extends CardProps {
   pubkey?: StringPublicKey;
@@ -120,6 +121,40 @@ export const ArtCard = (props: ArtCardProps) => {
           </>
         }
       />
+    </Card>
+  );
+
+  return art.creators?.find(c => !c.verified) ? (
+    <Badge.Ribbon text="Unverified">{card}</Badge.Ribbon>
+  ) : (
+    card
+  );
+};
+
+export const ArtCard2 = ({ pubkey, artView }) => {
+  const art = useArt(pubkey);
+  const name = art?.title || ' ';
+
+  const card = (
+    <Card hoverable={true} className={`auction-render-card`} bordered={false}>
+      <div className={'card-art-info'}>
+        <div
+          className="auction-gray-wrapper"
+          style={{ background: 'rgb(33, 32, 45)', padding: 0 }}
+        >
+          <div className={'art-content-wrapper'}>
+            <ArtContent
+              className="auction-image no-events"
+              preview={false}
+              pubkey={pubkey}
+              allowMeshRender={false}
+            />
+          </div>
+          <div style={{ padding: '16px', textAlign: 'center' }}>
+            <Title level={3}>{name}</Title>
+          </div>
+        </div>
+      </div>
     </Card>
   );
 
