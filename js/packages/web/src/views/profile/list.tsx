@@ -136,7 +136,7 @@ export const List = ({
                 </TabPane>
               )}
 
-              {profile && profile.wallet == userId && (
+              {/* {profile && profile.wallet == userId && (
                 <TabPane
                   tab={<span className="tab-title">Owned</span>}
                   key={ProfileTabState.Owned}
@@ -155,7 +155,7 @@ export const List = ({
                 key={ProfileTabState.Auctions}
               >
                 {auctionsView}
-              </TabPane>
+              </TabPane> */}
             </Tabs>
           </Row>
         </Col>

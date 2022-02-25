@@ -31,7 +31,10 @@ export const HeaderSection = () => {
                 Explore
               </Button>
             </Link>
-            <Link to={`/art/create`} style={{ width: '100%' }}>
+            <Link
+              to={`/art/create`}
+              style={{ width: '100%', marginLeft: '20px' }}
+            >
               <Button className="unimoon-button transparent-button">
                 Create
               </Button>

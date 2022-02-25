@@ -112,12 +112,19 @@ export const AuctionRenderCard2 = (props: AuctionCard) => {
                 'Go to auction'}
               ...
             </span>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div
+              className="info-container"
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+              }}
+            >
               <div className="auction-info-container">
                 <span className={'info-message'}>ENDING IN</span>
                 <AuctionCountdown auctionView={auctionView} labels={false} />
               </div>
-              <div className="card-bid-info">
+              <div className="card-bid-info" style={{ padding: '16px 0' }}>
                 <span className={'text-uppercase info-message'}>{status}</span>
                 <AmountLabel
                   containerStyle={{ flexDirection: 'row' }}
