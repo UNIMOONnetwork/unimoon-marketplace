@@ -75,7 +75,9 @@ export const SetupView = () => {
       {wallet.connected && !store && (
         <>
           <p>Store is not initialized yet</p>
-          <p>There must be some ◎ SOL in the wallet before initialization.</p>
+          <p>
+            There must be some ◎ UNIMOON in the wallet before initialization.
+          </p>
           <p>
             After initialization, you will be able to manage the list of
             creators

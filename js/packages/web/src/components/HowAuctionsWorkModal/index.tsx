@@ -17,7 +17,7 @@ export const HowAuctionsWorkModal: React.FC<HowAuctionsWorkModalProps> = ({
       cardProps={[
         {
           title: 'Placing a Bid',
-          description: `Once you find an NFT you’d like to own, place a bid on the auction page. Keep in mind the amount of SOL you bid will be locked in your wallet for the remainder of the auction.`,
+          description: `Once you find an NFT you’d like to own, place a bid on the auction page. Keep in mind the amount of UNIMOON you bid will be locked in your wallet for the remainder of the auction.`,
           imgSrc: '/modals/how-auctions-work-1.jpg',
         },
         {

@@ -31,7 +31,7 @@ const getDefaultLinkActions = (connected: boolean) => {
       <Button className="app-btn">Creators</Button>
     </Link>,
     <Link to={`/rank-board`} key={'rankboard'}>
-      <Button className="app-btn">Ranking</Button>
+      <Button className="app-btn">Stats</Button>
     </Link>,
   ];
 };
@@ -54,7 +54,7 @@ const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
     ) : (
       <Input
         className={'search-box'}
-        placeholder="Input search text"
+        placeholder="Search Collections"
         value={searchText}
         onChange={onSearchChange}
         onPressEnter={onSearch}
@@ -84,10 +84,12 @@ export const MetaplexMenu = () => {
     return (
       <>
         <Modal
-          title={<img src={'/metaplex-logo.svg'} />}
+          title={
+            <img src={'/unimoon-text-logo.png'} style={{ height: '30px' }} />
+          }
           visible={isModalVisible}
           footer={null}
-          className={'modal-box'}
+          className={'modal-box app-bar-modal'}
           closeIcon={
             <img
               onClick={() => setIsModalVisible(false)}
@@ -119,8 +121,8 @@ export const MetaplexMenu = () => {
                       setIsModalVisible(false);
                     }}
                   />
-                  <Notifications />
-                  <Cog />
+                  {/* <Notifications /> */}
+                  {/* <Cog /> */}
                 </>
               )}
             </div>
@@ -153,12 +155,15 @@ export const AppBar = () => {
       <div id="desktop-navbar">
         <div className="app-left">
           <LogoLink />
-          &nbsp;&nbsp;&nbsp;
-          <MetaplexMenu />
         </div>
         <div className="app-right">
+          <MetaplexMenu />
           {!connected && (
-            <ConnectButton style={{ height: 48 }} allowWalletChange />
+            <ConnectButton
+              style={{ height: 48 }}
+              allowWalletChange
+              className="unimoon-button gradient-button"
+            />
           )}
           {connected && (
             <>
@@ -167,8 +172,8 @@ export const AppBar = () => {
                 showAddress={true}
                 iconSize={24}
               />
-              <Notifications />
-              <Cog />
+              {/* <Notifications /> */}
+              {/* <Cog /> */}
             </>
           )}
         </div>

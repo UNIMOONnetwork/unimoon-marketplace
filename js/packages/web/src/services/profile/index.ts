@@ -1,4 +1,4 @@
-import axios from '../../utils/axios';
+import axios, { decryptResponse } from '../../utils/axios';
 
 export type Profile = {
   id: string;
@@ -17,26 +17,11 @@ export type Profile = {
 };
 
 export class ProfileService {
-  getProfileByID = async (wallet): Promise<Profile> => {
-    const { data } = await axios.get(`/user/${wallet}`);
+  getProfileByID = async (wallet): Promise<string> => {
+    const response =
+      'I09v1m9AniGRWnzi68U//VZXY5UvF7KW2sW1CFbUyy+NFR3PWHJT2aGCRjFZhwQU'; //await axios.get(`/get_userby_wallet?wallet=${wallet}`);
 
-    return data;
-  };
-
-  updateProfile = async (id: string, profile: any) => {
-    if (id) {
-      return new Promise((resolve, reject) =>
-        axios
-          .put(`/user/edit_profile`, profile)
-          .then(({ data }) => {
-            resolve(data);
-          })
-          .catch(({ response: { data: err } }) => {
-            console.log(err);
-            reject(err);
-          }),
-      );
-    }
+    return decryptResponse(response);
   };
 }
 

@@ -74,14 +74,6 @@
     flex-direction: row;
     margin-left: 7.8125%;
     width: 100%;
-
-    .search-box {
-      width: 200px;
-    }
-    .search-box:hover,
-    .search-box:focus {
-      width: 80% !important;
-    }
   }
 
   .app-right {
@@ -90,5 +82,16 @@
     flex-direction: row;
     margin-right: 7.8125%;
     right: 0;
+
+    .search-box {
+      width: 200px;
+      min-width: 200px;
+    }
+  }
+}
+
+.app-bar-modal {
+  .ant-modal-body {
+    width: 100%;
   }
 }

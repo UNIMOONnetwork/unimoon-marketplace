@@ -23,6 +23,7 @@ export const AppLayout = React.memo((props: any) => {
             zIndex: 1,
             left: 0,
             background: '#121212',
+            maxHeight: 90,
           }}
         >
           <AppBar />

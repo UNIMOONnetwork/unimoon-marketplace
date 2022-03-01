@@ -1197,7 +1197,7 @@ const LaunchStep = (props: {
           onClick={props.confirm}
           className="action-btn"
         >
-          Pay with SOL
+          Pay with UNIMOON
         </Button>
         <Button
           disabled={true}

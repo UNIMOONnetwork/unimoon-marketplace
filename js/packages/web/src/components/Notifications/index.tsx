@@ -331,7 +331,7 @@ export function useSettlementAuctions({
                 myPayingAccount?.pubkey,
                 accountByMint,
               );
-              // accept funds (open WSOL & close WSOL) only if Auction currency SOL
+              // accept funds (open WSOL & close WSOL) only if Auction currency UNIMOON
               if (
                 wallet.publicKey &&
                 auctionView.auction.info.tokenMint ==

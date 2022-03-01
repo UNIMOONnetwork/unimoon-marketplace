@@ -11,3 +11,7 @@ instance.interceptors.request.use(req => {
 });
 instance.interceptors.response.use(response => response);
 export default instance;
+
+export const decryptResponse = (response: string) => {
+  return '';
+};

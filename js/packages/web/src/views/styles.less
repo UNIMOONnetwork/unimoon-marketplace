@@ -1,4 +1,4 @@
-@import "~antd/lib/style/themes/default.less";
+@import '~antd/lib/style/themes/default.less';
 
 * {
   font-family: 'GraphikWeb';
@@ -6,7 +6,7 @@
 
 .ant-layout-content {
   overflow: auto !important;
-  @media (max-width: @mobile-xs-max){
+  @media (max-width: @mobile-xs-max) {
     padding: 0 !important;
   }
 }
@@ -16,25 +16,29 @@
 
 .action-btn:disabled {
   color: rgba(255, 255, 255, 0.5);
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: rgba(255, 255, 255, 0.5);
   }
 }
 
-.ant-upload-list-item-info .anticon-loading .anticon, .ant-upload-list-item-info .ant-upload-text-icon .anticon {
+.ant-upload-list-item-info .anticon-loading .anticon,
+.ant-upload-list-item-info .ant-upload-text-icon .anticon {
   color: white;
 }
 
 .ant-upload-list-item:hover {
-  .ant-upload-list-item-info .anticon-loading .anticon, .ant-upload-list-item-info .ant-upload-text-icon .anticon,
+  .ant-upload-list-item-info .anticon-loading .anticon,
+  .ant-upload-list-item-info .ant-upload-text-icon .anticon,
   .ant-upload-list-item-name {
     color: @black-100 !important;
   }
 }
 
 .url-form-action {
-  color: #FFFFFF !important;
-  &.ant-form-item-has-error :not(.ant-input-disabled):not(.ant-input-borderless).ant-input {
+  color: #ffffff !important;
+  &.ant-form-item-has-error
+    :not(.ant-input-disabled):not(.ant-input-borderless).ant-input {
     color: red;
   }
   h3 {
@@ -85,7 +89,7 @@
   .ant-select {
     color: @black-100;
   }
-  .anticon.ant-input-clear-icon{
+  .anticon.ant-input-clear-icon {
     color: white;
   }
   .ant-input-group-addon .ant-select {
@@ -193,15 +197,16 @@
   box-shadow: 0 0 24px rgba(26, 26, 26, 0.12);
   border-radius: 8px;
   padding: 12px 20px;
-  font-family: "SF Pro Text";
+  font-family: 'SF Pro Text';
   font-style: normal;
   font-weight: 600;
   height: fit-content;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background: transparent;
-    border-color: #FFFFFF;
-    color: #FFFFFF;
+    border-color: #ffffff;
+    color: #ffffff;
   }
 }
 
@@ -251,7 +256,6 @@ h2 {
     order: 0;
     flex-grow: 0;
   }
-
 }
 
 .action-field {
@@ -317,7 +321,6 @@ h2 {
   margin: 12px 0;
 }
 
-
 .waiting-title {
   font-weight: 600;
   font-size: 2rem;
@@ -352,8 +355,8 @@ h2 {
   /* identical to box height, or 100% */
   letter-spacing: -0.01em;
   /* White */
-  color: #FFFFFF;
-  &.w100{
+  color: #ffffff;
+  &.w100 {
     width: 100%;
   }
 }
@@ -404,4 +407,21 @@ h2 {
   & > li:hover {
     background-color: #2a2a2a !important;
   }
+}
+
+.unimoon-button {
+  border-radius: 32px;
+  width: 174px;
+  height: 50px;
+  font-weight: 600 !important;
+}
+
+.transparent-button {
+  border: 1px solid #ec6fc2;
+  color: #ec6fc2;
+}
+
+.gradient-button {
+  color: black;
+  background-image: url('/button.png') !important;
 }

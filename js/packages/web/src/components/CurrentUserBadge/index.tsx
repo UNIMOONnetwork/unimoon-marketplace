@@ -75,7 +75,7 @@ const UserActions = (props: { mobile?: boolean; onClick?: any }) => {
                 Sell
               </Button>
             </Link>
-            <Link to={'/edit-profile'}>
+            <Link to={`/profile/${pubkey}`}>
               <Button
                 onClick={() => {
                   props.onClick ? props.onClick() : null;
@@ -136,7 +136,7 @@ const UserActions = (props: { mobile?: boolean; onClick?: any }) => {
                 display: 'flex',
               }}
             >
-              <Link to={`/edit-profile`} style={{ width: '100%' }}>
+              <Link to={`/profile/${pubkey}`} style={{ width: '100%' }}>
                 <Button className="metaplex-button-default" style={btnStyle}>
                   Profile
                 </Button>
@@ -212,7 +212,7 @@ const AddFundsModal = (props: {
             >
               <img src="/unimoon.png" width="10" />
             </span>{' '}
-            SOL
+            UNIMOON
           </span>
         </div>
         <p>
@@ -282,7 +282,9 @@ export const CurrentUserBadge = (props: {
     return null;
   }
   const balance = (account?.lamports || 0) / LAMPORTS_PER_SOL;
+
   const balanceInUSD = balance * solPrice;
+
   const solMintInfo = useTokenList().tokenMap.get(WRAPPED_SOL_MINT.toString());
   const iconStyle: React.CSSProperties = {
     display: 'flex',
@@ -306,7 +308,8 @@ export const CurrentUserBadge = (props: {
     <div className="wallet-wrapper">
       {props.showBalance && (
         <span>
-          {formatNumber.format((account?.lamports || 0) / LAMPORTS_PER_SOL)} SOL
+          {formatNumber.format((account?.lamports || 0) / LAMPORTS_PER_SOL)}{' '}
+          UNIMOON
         </span>
       )}
 
@@ -346,7 +349,7 @@ export const CurrentUserBadge = (props: {
                       color: '#FFFFFF',
                     }}
                   >
-                    {formatNumber.format(balance)} SOL
+                    {formatNumber.format(balance)} UNIMOON
                   </span>
                   &nbsp;
                   <span
@@ -547,7 +550,7 @@ export const CurrentUserBadgeMobile = (props: {
           <span className="sol-img-wrapper">
             <img src="/unimoon.png" width="10" />
           </span>{' '}
-          {formatNumber.format(balance)}&nbsp;&nbsp; SOL{' '}
+          {formatNumber.format(balance)}&nbsp;&nbsp; UNIMOON{' '}
           <span
             style={{
               marginLeft: 5,

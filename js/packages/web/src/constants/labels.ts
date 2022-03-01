@@ -1,7 +1,7 @@
 export const LABELS = {
   STORE_NAME: 'Unimoon',
   CONNECT_LABEL: 'Connect Wallet',
-  GIVE_SOL: 'Give me SOL',
+  GIVE_SOL: 'Give me UNIMOON',
   FAUCET_INFO:
     'This faucet will help you fund your accounts outside of Solana main network.',
   ACCOUNT_FUNDED: 'Account funded.',

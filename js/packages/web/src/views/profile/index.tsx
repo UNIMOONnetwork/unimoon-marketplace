@@ -19,15 +19,15 @@ export const ProfileView = () => {
 
   useEffect(() => {
     // if (id)
-    // (async () => {
-    //   try {
-    //     await profileService.getProfileByID(id).then(res => {
-    //       setProfile(res);
-    //     });
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // })();
+    //   (async () => {
+    //     try {
+    //       await profileService.getProfileByID(id).then(res => {
+    //         setProfile(res);
+    //       });
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   })();
     if (id)
       setProfile({
         id: 'test',

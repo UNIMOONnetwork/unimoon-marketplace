@@ -276,7 +276,10 @@ export const AuctionView = () => {
     return (
       <Row justify="center" ref={ref} gutter={[48, 0]}>
         <Col span={24} md={10} className={'img-cont-500'}>
-          <div className="auction-view" style={{ minHeight: 300 }}>
+          <div
+            className="auction-view"
+            style={{ minHeight: 300, marginTop: 44 }}
+          >
             <Carousel
               autoplay={false}
               afterChange={index => setCurrentIndex(index)}
@@ -357,7 +360,7 @@ export const AuctionView = () => {
                     )}
                   </span>
                 </div>
-                <div className={'info-component'}>
+                {/* <div className={'info-component'}>
                   <h6 className={'info-title'}>CURRENCY</h6>
                   <span>
                     {nftCount === undefined ? (
@@ -376,7 +379,7 @@ export const AuctionView = () => {
                       }
                     />
                   </span>
-                </div>
+                </div> */}
               </div>
             </Col>
             <Col span={12} md={8} className="view-on-container">
@@ -388,7 +391,7 @@ export const AuctionView = () => {
                       className="tag"
                       onClick={() => window.open(art.uri || '', '_blank')}
                     >
-                      Arweave
+                      Storj
                     </Button>
                     <Button
                       className="tag"
