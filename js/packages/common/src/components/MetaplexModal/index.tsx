@@ -11,6 +11,7 @@ export const MetaplexModal = (props: any) => {
         boxShadow: '0px 20px 12px 8px rgba(0, 0, 0, 0.3)',
         display: 'flex',
         flexDirection: 'column',
+        width: '100%',
 
         ...bodyStyle,
       }}

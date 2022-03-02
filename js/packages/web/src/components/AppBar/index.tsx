@@ -105,10 +105,13 @@ export const MetaplexMenu = () => {
             </Menu>
             <div className="actions">
               {!connected ? (
-                <div className="actions-buttons">
+                <div
+                  className="actions-buttons"
+                  style={{ textAlign: 'center' }}
+                >
                   <ConnectButton
                     onClick={() => setIsModalVisible(false)}
-                    className="secondary-btn"
+                    className="unimoon-button gradient-button"
                   />
                 </div>
               ) : (

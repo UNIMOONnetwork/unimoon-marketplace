@@ -37,7 +37,7 @@ const btnStyle2: React.CSSProperties = {
 };
 
 const UserActions = (props: { mobile?: boolean; onClick?: any }) => {
-  const { wallet, publicKey } = useWallet();
+  const { wallet, publicKey, disconnect } = useWallet();
   const { whitelistedCreatorsByCreator, store } = useMeta();
   const pubkey = publicKey?.toBase58() || '';
 
@@ -103,6 +103,11 @@ const UserActions = (props: { mobile?: boolean; onClick?: any }) => {
                 className="black-btn"
               >
                 Create Collection
+              </Button>
+            </Link>
+            <Link to={'#'}>
+              <Button className="black-btn" onClick={disconnect}>
+                Disconnect
               </Button>
             </Link>
           </div>
@@ -367,14 +372,14 @@ export const CurrentUserBadge = (props: {
                     marginBottom: 10,
                   }}
                 >
-                  <Button
+                  {/* <Button
                     className="metaplex-button-default"
                     onClick={() => setShowAddFundsModal(true)}
                     style={btnStyle2}
                   >
                     Add Funds
                   </Button>
-                  &nbsp;&nbsp;
+                  &nbsp;&nbsp; */}
                   <Button
                     className="metaplex-button-default"
                     onClick={disconnect}
@@ -561,20 +566,6 @@ export const CurrentUserBadgeMobile = (props: {
             {formatUSD.format(balanceInUSD)}
           </span>
         </span>
-      </div>
-      <div className="actions-buttons">
-        <Button
-          className="secondary-btn"
-          onClick={() => {
-            props.closeModal ? props.closeModal() : null;
-            setShowAddFundsModal(true);
-          }}
-        >
-          Add Funds
-        </Button>
-        <Button className="black-btn" onClick={disconnect}>
-          Disconnect
-        </Button>
       </div>
       <div className="actions-buttons">
         <UserActions
