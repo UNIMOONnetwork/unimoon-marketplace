@@ -1,33 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Layout, Avatar, Badge, Typography } from 'antd';
-import { Link } from 'react-router-dom';
+import { Col, Row, Layout } from 'antd';
 import { useCollections } from '../../../../hooks';
 import { ICollectionData } from '../../../../actions/collection/schema';
+import { CollectionCard2 } from '../../../../components/CollectionCard';
 
-const { Title } = Typography;
 const { Content } = Layout;
-
-const CollectionCard = props => {
-  const { creator, image, name, members } = props;
-
-  return (
-    <>
-      <Link to={`/collections/${creator}/${name.trim()}`}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Badge count={members.length} offset={[-15, 15]} color="pink">
-            <Avatar
-              style={{ height: 110, width: 110, cursor: 'pointer' }}
-              src={image}
-            />
-          </Badge>
-          <Title level={2} style={{ margin: '0 0 0 20px' }}>
-            {name}
-          </Title>
-        </div>
-      </Link>
-    </>
-  );
-};
 
 export const CollectionsSection = () => {
   const { collections, collectionLoading } = useCollections();
@@ -52,7 +29,7 @@ export const CollectionsSection = () => {
               {sortedCollections &&
                 sortedCollections.length > 0 &&
                 sortedCollections.map((item, index) => (
-                  <CollectionCard {...item} key={index} />
+                  <CollectionCard2 {...item} key={index} />
                 ))}
             </Row>
           </Col>

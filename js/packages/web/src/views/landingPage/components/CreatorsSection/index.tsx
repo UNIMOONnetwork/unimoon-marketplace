@@ -24,7 +24,7 @@ export const CreatorsSection = () => {
   };
 
   const items = Object.values(whitelistedCreatorsByCreator);
-  console.log(items);
+
   return (
     <div className="creators-section">
       <Layout style={{ margin: 0, marginTop: 30 }}>

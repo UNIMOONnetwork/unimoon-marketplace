@@ -18,7 +18,7 @@ import {
   CollectionsView,
   ProfileView,
   EditProfileView,
-  LeaderBoardView,
+  StatsBoardView,
   LandingView,
 } from './views';
 import { AdminView } from './views/admin';
@@ -97,7 +97,7 @@ export function Routes() {
             <Route
               exact
               path="/rank-board"
-              component={() => <LeaderBoardView />}
+              component={() => <StatsBoardView />}
             />
             <Route
               exact

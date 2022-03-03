@@ -1,31 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Layout } from 'antd';
+import { Col, Row, Layout, Typography } from 'antd';
 import { ICollectionData } from '../../actions/collection/schema';
 import { useCollections } from '../../hooks';
-import { CollectionCard } from '../../components/CollectionCard';
-import { CardLoader } from '../../components/MyLoader';
+import { CollectionCard2 } from '../../components/CollectionCard';
 
 const { Content } = Layout;
-
-export const CollectionsContentView = ({ loading, collections }) => {
-  return (
-    <div className="artwork-grid">
-      {!loading ? (
-        collections && collections.length > 0 ? (
-          collections.map((item, index) => (
-            <CollectionCard {...item} key={index} />
-          ))
-        ) : (
-          <span>No filtered collections</span>
-        )
-      ) : (
-        Array(4)
-          .fill({})
-          .map((_, index) => <CardLoader key={index} />)
-      )}
-    </div>
-  );
-};
+const { Title } = Typography;
 
 export const CollectionsView = () => {
   const [scrollPageNum, setScrollPageNum] = useState(1);
@@ -71,22 +51,21 @@ export const CollectionsView = () => {
   }, [collections]);
 
   return (
-    <>
-      <Layout style={{ margin: 0, marginTop: 30 }}>
-        <Row>
-          <div style={{ fontWeight: 700, fontSize: '3rem' }}>Collections</div>
-        </Row>
+    <div className="collections-view">
+      <Layout style={{ margin: 0, marginTop: 0 }}>
+        <div style={{ fontWeight: 700, fontSize: '3rem' }}>Collections</div>
         <Content style={{ display: 'flex', flexWrap: 'wrap' }}>
           <Col style={{ width: '100%', marginTop: 10 }}>
-            <Row>
-              <CollectionsContentView
-                loading={collectionLoading}
-                collections={filteredCollections}
-              />
+            <Row className="collection-group">
+              {filteredCollections &&
+                filteredCollections.length > 0 &&
+                filteredCollections.map((item, index) => (
+                  <CollectionCard2 {...item} key={index} />
+                ))}
             </Row>
           </Col>
         </Content>
       </Layout>
-    </>
+    </div>
   );
 };

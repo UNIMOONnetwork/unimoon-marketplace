@@ -2,7 +2,7 @@ import { Col, Layout } from 'antd';
 import React from 'react';
 import Masonry from 'react-masonry-css';
 import { Link } from 'react-router-dom';
-import { ArtistCard } from '../../components/ArtistCard';
+import { ArtistCard2 } from '../../components/ArtistCard';
 import { useMeta } from '../../contexts';
 
 const { Content } = Layout;
@@ -17,6 +17,13 @@ export const ArtistsView = () => {
     500: 1,
   };
 
+  const artistsImgs = [
+    '/img/artist1.png',
+    '/img/artist2.png',
+    '/img/artist3.png',
+    '/img/artist4.png',
+  ];
+
   const items = Object.values(whitelistedCreatorsByCreator);
 
   const artistGrid = (
@@ -29,14 +36,14 @@ export const ArtistsView = () => {
         const id = m.info.address;
         return (
           <Link to={`/profile/${id}`} key={idx}>
-            <ArtistCard
+            <ArtistCard2
               key={id}
               artist={{
                 address: m.info.address,
                 name: m.info.name || '',
                 image: m.info.image || '',
                 link: m.info.twitter || '',
-                background: m.info.background || '',
+                background: m.info.background || artistsImgs[idx],
               }}
             />
           </Link>

@@ -11,7 +11,7 @@ export { StaticPageView } from './staticPage';
 export { SearchPageView } from './searchPage';
 export { ProfileView } from './profile';
 export { EditProfileView } from './profile/edit';
-export { LeaderBoardView } from './leaderBoard';
+export { StatsBoardView } from './statsBoard';
 export { CreateCollectionView } from './createCollection';
 export { CollectionView } from './collection';
 export { CollectionsView } from './collections';
