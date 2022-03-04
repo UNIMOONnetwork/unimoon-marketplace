@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Layout, Row, Col, Tabs, Dropdown, Menu } from 'antd';
 import { useMeta } from '../../contexts';
 import { CardLoader } from '../../components/MyLoader';
-import { CollectionsContentView } from '../../components/CollectionCard';
+import { CollectionCard2 } from '../../components/CollectionCard';
 
 import { ArtworkViewState } from './types';
 import { useItems } from './hooks/useItems';
@@ -94,7 +94,7 @@ export const ArtworksView = () => {
   );
 
   return (
-    <Layout style={{ margin: 0, marginTop: 30 }}>
+    <Layout style={{ margin: 0, marginTop: 30 }} className="artworks">
       <Content style={{ display: 'flex', flexWrap: 'wrap' }}>
         <Col style={{ width: '100%', marginTop: 10 }}>
           <Row>
@@ -108,10 +108,17 @@ export const ArtworksView = () => {
                   tab={<span className="tab-title">Collections</span>}
                   key={ArtworkViewState.Metaplex}
                 >
-                  <CollectionsContentView
-                    loading={collectionLoading}
-                    collections={collections}
-                  />
+                  <Content style={{ display: 'flex', flexWrap: 'wrap' }}>
+                    <Col style={{ width: '100%', marginTop: 10 }}>
+                      <Row className="collection-group">
+                        {collections &&
+                          collections.length > 0 &&
+                          collections.map((item, index) => (
+                            <CollectionCard2 {...item} key={index} />
+                          ))}
+                      </Row>
+                    </Col>
+                  </Content>
                 </TabPane>
 
                 <TabPane

@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
-import { ArtCard } from '../../../../components/ArtCard';
+import { ArtCard, ArtCard2 } from '../../../../components/ArtCard';
 import PackCard from '../../../../components/PackCard';
 import { Item } from '../../types';
 import { isMetadata, isPack } from '../../utils';
@@ -42,11 +42,11 @@ const ItemCard = ({ item }: { item: Item }): ReactElement => {
 
   return (
     <Link to={`/art/${pubkey}`}>
-      <ArtCard
+      <ArtCard2
         pubkey={pubkey}
-        preview={false}
-        height={ART_CARD_SIZE}
-        width={ART_CARD_SIZE}
+        // preview={false}
+        // height={ART_CARD_SIZE}
+        // width={ART_CARD_SIZE}
         artView
       />
     </Link>

@@ -7,7 +7,7 @@ import { useMeta } from '../../../../contexts';
 import { CardLoader } from '../../../../components/MyLoader';
 
 import { useAuctionsList } from './hooks/useAuctionsList';
-import { AuctionRenderCard } from '../../../../components/AuctionRenderCard';
+import { AuctionRenderCard2 } from '../../../../components/AuctionRenderCard';
 
 const { TabPane } = Tabs;
 const { Content } = Layout;
@@ -82,7 +82,7 @@ export const SalesListView = () => {
                       key={auction.auction.pubkey}
                       to={`/auction/${auction.auction.pubkey}`}
                     >
-                      <AuctionRenderCard auctionView={auction} />
+                      <AuctionRenderCard2 auctionView={auction} />
                     </Link>
                   ))}
               </div>
