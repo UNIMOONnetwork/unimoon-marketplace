@@ -18,19 +18,16 @@ export const StatsBoardView = () => {
           #
         </Col>
         <Col span={2}></Col>
-        <Col xs={15} sm={15} md={7} lg={7}>
+        <Col xs={15} sm={15} md={8} lg={8}>
           Collection Name
         </Col>
         <Col xs={5} sm={5} md={4} lg={4}>
-          Marketcap
+          NFT Count
         </Col>
-        <Col xs={0} sm={0} md={3} lg={3}>
-          7d Volume
-        </Col>
-        <Col xs={0} sm={0} md={3} lg={3}>
+        <Col xs={0} sm={0} md={4} lg={4}>
           Average Price
         </Col>
-        <Col xs={0} sm={0} md={3} lg={3}>
+        <Col xs={0} sm={0} md={4} lg={4}>
           Min Price
         </Col>
       </Row>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Layout, Row, Col, Tabs, Dropdown, Menu } from 'antd';
 import { useMeta } from '../../contexts';
 import { CardLoader } from '../../components/MyLoader';
-import { CollectionsContentView } from '../collections';
+import { CollectionsContentView } from '../../components/CollectionCard';
 
 import { ArtworkViewState } from './types';
 import { useItems } from './hooks/useItems';

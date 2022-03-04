@@ -17,20 +17,17 @@ const ItemCard = ({ index, collection }): ReactElement => {
               src={collection.image}
             />
           </Col>
-          <Col xs={15} sm={15} md={7} lg={7}>
+          <Col xs={15} sm={15} md={8} lg={8}>
             {collection.name}
           </Col>
           <Col xs={5} sm={5} md={4} lg={4}>
-            590000
+            {collection.members.length}
           </Col>
-          <Col xs={0} sm={0} md={3} lg={3}>
-            3
+          <Col xs={0} sm={0} md={4} lg={4}>
+            0
           </Col>
-          <Col xs={0} sm={0} md={3} lg={3}>
-            62.63
-          </Col>
-          <Col xs={0} sm={0} md={3} lg={3}>
-            50
+          <Col xs={0} sm={0} md={4} lg={4}>
+            0
           </Col>
         </Row>
       </div>

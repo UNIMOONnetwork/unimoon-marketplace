@@ -43,7 +43,7 @@ export const ArtistsView = () => {
                 name: m.info.name || '',
                 image: m.info.image || '',
                 link: m.info.twitter || '',
-                background: m.info.background || artistsImgs[idx],
+                background: m.info.background || artistsImgs[idx % 4],
               }}
             />
           </Link>

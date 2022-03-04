@@ -8,8 +8,8 @@ export const LoaderProvider: FC = ({ children }) => {
     <>
       <div className={`loader-container ${isLoading ? 'active' : ''}`}>
         <div className="loader-block">
-          <div className="loader-title">loading</div>
-          <Spinner />
+          {/* <Spinner /> */}
+          <img src="/unimoon_loading.gif" width={100} />
         </div>
       </div>
       {children}
