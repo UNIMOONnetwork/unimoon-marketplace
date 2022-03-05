@@ -60,7 +60,7 @@ export const CollectionCard2 = props => {
           <Badge count={members.length} offset={[-15, 15]} color="pink">
             <Avatar
               style={{ height: 110, width: 110, cursor: 'pointer' }}
-              src={image}
+              src={image ?? ''}
             />
           </Badge>
           <Title level={2} style={{ margin: '0 0 0 20px' }}>

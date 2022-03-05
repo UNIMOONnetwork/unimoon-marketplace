@@ -8,10 +8,10 @@ const ItemCard = ({ index, collection }): ReactElement => {
     <Link to={`/`}>
       <div className="item-card">
         <Row>
-          <Col span={2} style={{ paddingLeft: '15px' }}>
+          <Col xs={4} sm={4} md={2} lg={2} style={{ paddingLeft: '15px' }}>
             {index + 1}
           </Col>
-          <Col span={2}>
+          <Col xs={0} sm={0} md={2} lg={2}>
             <Avatar
               style={{ height: 50, width: 50, cursor: 'pointer' }}
               src={collection.image}

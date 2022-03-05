@@ -53,7 +53,9 @@ export const CollectionsView = () => {
   return (
     <div className="collections-view">
       <Layout style={{ margin: 0, marginTop: 0 }}>
-        <div style={{ fontWeight: 700, fontSize: '3rem' }}>Collections</div>
+        <div style={{ fontWeight: 700, fontSize: '3rem', textAlign: 'center' }}>
+          Collections
+        </div>
         <Content style={{ display: 'flex', flexWrap: 'wrap' }}>
           <Col style={{ width: '100%', marginTop: 10 }}>
             <Row className="collection-group">

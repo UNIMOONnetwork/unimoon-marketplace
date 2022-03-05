@@ -9,15 +9,15 @@ export const StatsBoardView = () => {
   return (
     <div className="stats-board">
       <Row>
-        <div style={{ fontWeight: 700, fontSize: '3rem' }}>
+        <div style={{ fontWeight: 700, fontSize: '3rem', textAlign: 'center' }}>
           Top NFT Collections
         </div>
       </Row>
       <Row>
-        <Col span={2} style={{ paddingLeft: '15px' }}>
+        <Col xs={4} sm={4} md={2} lg={2} style={{ paddingLeft: '15px' }}>
           #
         </Col>
-        <Col span={2}></Col>
+        <Col xs={0} sm={0} md={2} lg={2}></Col>
         <Col xs={15} sm={15} md={8} lg={8}>
           Collection Name
         </Col>
