@@ -733,8 +733,13 @@ const InfoStep = (props: {
           <label className="action-field">
             <span className="field-title">Collections</span>
             <Select
+              className="collection-select"
               showSearch
-              style={{ width: '100%', color: 'white', height: '100%' }}
+              style={{
+                width: '100%',
+                color: 'white',
+                height: '100%',
+              }}
               placeholder="Search to Select"
               optionFilterProp="children"
               onSelect={index => {
@@ -1190,7 +1195,7 @@ const LaunchStep = (props: {
           )}
         </Col>
       </Row>
-      <Row>
+      <Row style={{ marginTop: '20px' }}>
         <Button
           type="primary"
           size="large"
@@ -1199,14 +1204,14 @@ const LaunchStep = (props: {
         >
           Pay with UNIMOON
         </Button>
-        <Button
+        {/* <Button
           disabled={true}
           size="large"
           onClick={props.confirm}
           className="action-btn"
         >
           Pay with Credit Card
-        </Button>
+        </Button> */}
       </Row>
     </>
   );
@@ -1235,6 +1240,7 @@ const WaitingStep = (props: {
 
   return (
     <div
+      className="waiting-step"
       style={{
         marginTop: 70,
         display: 'flex',
