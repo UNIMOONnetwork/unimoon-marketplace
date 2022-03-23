@@ -3,8 +3,7 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 export const LAMPORT_MULTIPLIER = LAMPORTS_PER_SOL;
 
-export const ARWEAVE_UPLOAD_ENDPOINT =
-  'https://us-central1-metaplex-studios.cloudfunctions.net/uploadFile';
+export const ARWEAVE_UPLOAD_ENDPOINT = 'http://8.12.17.224:80/api';
 
 export async function getAssetCostToStore(files: { size: number }[]) {
   const sizes = files.map(f => f.size);

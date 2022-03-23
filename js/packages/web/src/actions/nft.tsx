@@ -260,7 +260,9 @@ export const mintNFT = async (
     const updateSigners: Keypair[] = [];
 
     // TODO: connect to testnet arweave
-    const arweaveLink = `https://arweave.net/${metadataFile.transactionId}`;
+    // const arweaveLink = `https://arweave.net/${metadataFile.transactionId}`;
+    const arweaveLink = metadataFile.transactionId;
+
     await updateMetadata(
       new Data({
         name: metadata.name,
