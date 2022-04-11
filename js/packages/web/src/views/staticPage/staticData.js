@@ -8,7 +8,8 @@ export const data = {
   midContent: {
     sections: [
       {
-        title: 'Unimoon is a protocol built on top of Solana that allows:',
+        title:
+          'Unimoon Marketplace is a protocol built on top of Unimoon that allows:',
         paragraphs: [
           '• Creating/Minting non-fungible tokens;',
           '• Starting a variety of auctions for primary/secondary sales;',

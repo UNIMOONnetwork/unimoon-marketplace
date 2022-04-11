@@ -27,12 +27,10 @@ export const ProfileProvider = ({ children }: ProfileProviderProps) => {
     if (userId) {
       (async () => {
         try {
-          await profileService
-            .getProfileByID(userId)
-            .then(res => {
-              setProfile(res);
-              setProfileLoading(false);
-            });
+          await profileService.getProfileByID(userId).then(res => {
+            // setProfile(res);
+            setProfileLoading(false);
+          });
         } catch (error) {
           console.log(error);
         }

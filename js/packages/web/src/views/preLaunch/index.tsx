@@ -190,7 +190,7 @@ export const PreLaunchView = () => {
               <div className={'how-to-step'}>
                 <span className={'how-to-logo wallet'}></span>
                 <span className={'how-to-description'}>
-                  After verification, we&apos;ll help you set up a Solana
+                  After verification, we&apos;ll help you set up a Unimoon
                   crypto-wallet. This is where we&apos;ll send the NFT.
                 </span>
               </div>
@@ -206,7 +206,7 @@ export const PreLaunchView = () => {
               <span className={'high-light'}>{email}</span>
             </div>
             <div className={'verify-message mb32'}>
-              <span>Paste your Solana wallet address here.</span>
+              <span>Paste your Unimoon wallet address here.</span>
             </div>
             {loadingUser ? (
               <Spin />

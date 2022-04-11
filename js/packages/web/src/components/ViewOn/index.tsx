@@ -16,7 +16,7 @@ export const ViewOn = ({ id }: { id: string }) => {
             className="tag"
             onClick={() => window.open(art.uri || '', '_blank')}
           >
-            Arweave
+            Stroj
           </Button>
           <Button
             className="tag"
@@ -32,7 +32,7 @@ export const ViewOn = ({ id }: { id: string }) => {
               window.open(explorerURL.href, '_blank');
             }}
           >
-            Solana
+            Unimoon
           </Button>
         </div>
       </Col>

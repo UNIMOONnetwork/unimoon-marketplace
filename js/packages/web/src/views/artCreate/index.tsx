@@ -397,8 +397,8 @@ const UploadStep = (props: {
       <Row className="call-to-action">
         <h2>Now, let's upload your creation</h2>
         <p style={{ fontSize: '1.2rem' }}>
-          Your file will be uploaded to the decentralized web via Arweave.
-          Depending on file type, can take up to 1 minute. Arweave is a new type
+          Your file will be uploaded to the decentralized web via Storj.
+          Depending on file type, can take up to 1 minute. Storj is a new type
           of storage that backs data with sustainable and perpetual endowments,
           allowing users and developers to truly store data forever – for the
           very first time.
@@ -1270,7 +1270,7 @@ const WaitingStep = (props: {
           />
           <Step
             className={'white-description'}
-            title="Sending Transaction to Solana"
+            title="Sending Transaction to Unimoon"
             description="This will take a few seconds."
             icon={setIconForStep(props.step, 3)}
           />
@@ -1286,7 +1286,7 @@ const WaitingStep = (props: {
           />
           <Step
             className={'white-description'}
-            title="Uploading to Arweave"
+            title="Uploading to Storj"
             icon={setIconForStep(props.step, 6)}
           />
           <Step

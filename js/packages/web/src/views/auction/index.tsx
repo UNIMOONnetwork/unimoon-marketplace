@@ -246,7 +246,7 @@ export const AuctionView = () => {
                 className="tag"
                 onClick={() => window.open(art.uri || '', '_blank')}
               >
-                Arweave
+                Storj
               </Button>
               <Button
                 className="tag"
@@ -262,7 +262,7 @@ export const AuctionView = () => {
                   window.open(explorerURL.href, '_blank');
                 }}
               >
-                Solana
+                Unimoon
               </Button>
             </div>
           </div>
@@ -407,7 +407,7 @@ export const AuctionView = () => {
                         window.open(explorerURL.href, '_blank');
                       }}
                     >
-                      Solana
+                      Unimoon
                     </Button>
                   </div>
                 </div>

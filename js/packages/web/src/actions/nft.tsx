@@ -55,7 +55,7 @@ const uploadToArweave = async (data: FormData): Promise<IArweaveResult> => {
   if (!resp.ok) {
     return Promise.reject(
       new Error(
-        'Unable to upload the artwork to Arweave. Please wait and then try again.',
+        'Unable to upload the artwork to Storj. Please wait and then try again.',
       ),
     );
   }
@@ -335,7 +335,7 @@ export const mintNFT = async (
       message: 'Art created on Solana',
       description: (
         <a href={arweaveLink} target="_blank" rel="noopener noreferrer">
-          Arweave Link
+          Storj Link
         </a>
       ),
       type: 'success',

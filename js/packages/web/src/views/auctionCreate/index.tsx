@@ -2158,7 +2158,7 @@ const Congrats = (props: {
       }/#/auction/${props.auction?.auction.toString()}`,
       hashtags: 'NFT,Crypto,Unimoon',
       // via: "Unimoon",
-      related: 'Unimoon,Solana',
+      related: 'Unimoon',
     };
     const queryParams = new URLSearchParams(params).toString();
     return `https://twitter.com/intent/tweet?${queryParams}`;
